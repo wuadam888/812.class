@@ -238,7 +238,7 @@
         // 更改密碼函數
         function changePassword() {
             if (!currentLoggedInUser) {
-                alert('請先登入後再更改密碼！');
+                alert('沒登入是要改什麼密碼啦！');
                 showLogin();
                 return;
             }
@@ -290,7 +290,7 @@
             })
             .catch(error => {
                 console.error('更改密碼請求錯誤:', error); // 在 Console 顯示詳細錯誤
-                alert('更改密碼請求發生錯誤：無法連接到伺服器或網路問題。請檢查伺服器狀態、網路連線及瀏覽器 Console 中的詳細錯誤。');
+                alert('更改密碼請求發生錯誤：無法連接到伺服器或網路問題。請檢查伺服器狀態、網路連線及瀏覽器 Console (按下F12)中的詳細錯誤。');
             });
         }
 
@@ -362,13 +362,13 @@
                     response.text().then(text => {
                         alert('文章發布失敗：' + (text || '未知錯誤'));
                     }).catch(() => {
-                        alert('文章發布失敗：伺服器錯誤');
+                        alert('文章發布失敗：無法連線至伺服器');
                     });
                 }
             })
             .catch(error => {
                 console.error('發布文章請求錯誤:', error);
-                alert('發布文章請求發生錯誤：無法連接到伺服器或網路問題。');
+                alert('發布文章請求發生錯誤：無法連接到伺服器或你的問題。');
             });
         }
         
