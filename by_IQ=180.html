@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>812官方網站</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            text-align: left;
+            margin: 10px 0 5px;
+            color: #555;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .toggle-link {
+            display: block;
+            margin-top: 20px;
+            color: #007bff;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .toggle-link:hover {
+            text-decoration: underline;
+        }
+        .section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        /* 初始隱藏註冊和改密碼區塊 */
+        #registerSection, #changePasswordSection {
+            display: none;
+        }
+        #welcomeMessage {
+            margin-top: 15px;
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="loginSection">
+            <h2>登入</h2>
+            <label for="loginUsername">使用者名稱:</label>
+            <input type="text" id="loginUsername" required>
+            <label for="loginPassword">密碼:</label>
+            <input type="password" id="loginPassword" required>
+            <button onclick="login()">登入</button>
+            <a class="toggle-link" onclick="showRegister()">還沒有帳號？點此註冊</a>
+        </div>
+
+        <div id="registerSection" class="section">
+            <h2>註冊</h2>
+            <label for="registerUsername">使用者名稱:</label>
+            <input type="text" id="registerUsername" required>
+            <label for="registerPassword">密碼:</label>
+            <input type="password" id="registerPassword" required>
+            <button onclick="register()">註冊</button>
+            <a class="toggle-link" onclick="showLogin()">已經有帳號？點此登入</a>
+        </div>
+
+        <div id="changePasswordSection" class="section">
+            <h2>更改密碼</h2>
+            <div id="welcomeMessage"></div> <label for="currentPassword">目前密碼:</label>
+            <input type="password" id="currentPassword" required>
+            <label for="newPassword">新密碼:</label>
+            <input type="password" id="newPassword" required>
+            <label for="confirmPassword">確認新密碼:</label>
+            <input type="password" id="confirmPassword" required>
+            <button onclick="changePassword()">確認更改</button>
+             <a class="toggle-link" onclick="logout()">登出</a> </div>
+    </div>
+
+    <script>
+        // === 修改點 1: 新增全域變數 ===
+        let currentLoggedInUser = null; // 用來儲存登入者的 username，初始為 null
+
+        // 顯示註冊區塊
+        function showRegister() {
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('registerSection').style.display = 'block';
+            document.getElementById('changePasswordSection').style.display = 'none';
+        }
+
+        // 顯示登入區塊
+        function showLogin() {
+            document.getElementById('loginSection').style.display = 'block';
+            document.getElementById('registerSection').style.display = 'none';
+            document.getElementById('changePasswordSection').style.display = 'none';
+            // 清空可能存在的歡迎訊息
+             const welcomeMsgElement = document.getElementById('welcomeMessage');
+             if (welcomeMsgElement) {
+                 welcomeMsgElement.innerText = '';
+             }
+        }
+
+        // 登入函數
+        function login() {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            // 基本的前端驗證
+            if (!username || !password) {
+                alert('請輸入使用者名稱和密碼！');
+                return;
+            }
+
+            fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            })
+            .then(response => {
+                if (response.ok) {
+                    // === 修改點 2: 登入成功時儲存 username ===
+                    currentLoggedInUser = username; // 登入成功，儲存 username
+
+                    alert('登入成功！');
+                    document.getElementById('loginSection').style.display = 'none';
+                    document.getElementById('registerSection').style.display = 'none';
+                    document.getElementById('changePasswordSection').style.display = 'block'; // 顯示更改密碼區塊
+                    // 顯示歡迎訊息
+                    document.getElementById('welcomeMessage').innerText = `歡迎， ${currentLoggedInUser}!`;
+                     // 清空登入表單
+                    document.getElementById('loginUsername').value = '';
+                    document.getElementById('loginPassword').value = '';
+                } else {
+                     // === 修改點 2.1: 登入失敗時清除 username ===
+                    currentLoggedInUser = null;
+                    response.text().then(text => alert('登入失敗：' + text));
+                }
+            })
+            .catch(error => {
+                 // === 修改點 2.2: 請求錯誤時清除 username ===
+                currentLoggedInUser = null;
+                console.error('登入請求錯誤:', error);
+                alert('登入請求發生錯誤，傳訊息給81226請他打開伺服器');
+            });
+        }
+
+        // 註冊函數
+        function register() {
+            const username = document.getElementById('registerUsername').value;
+            const password = document.getElementById('registerPassword').value;
+
+             // 基本的前端驗證
+            if (!username || !password) {
+                alert('請輸入使用者名稱和密碼！');
+                return;
+            }
+            // 可以在這裡加入更複雜的密碼強度驗證等
+
+            fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            })
+            .then(response => response.text().then(text => ({ status: response.status, text }))) // 先讀取文字內容
+            .then(({ status, text }) => {
+                 // 使用 status code 判斷更可靠
+                 if (status === 201) { // 假設後端成功回傳 201 Created
+                     alert('註冊成功！現在您可以登入了。');
+                     showLogin(); // 跳轉回登入畫面
+                     // 清空註冊表單
+                    document.getElementById('registerUsername').value = '';
+                    document.getElementById('registerPassword').value = '';
+                 } else {
+                     // 顯示後端傳來的錯誤訊息
+                     alert('註冊失敗：' + text);
+                 }
+            })
+            .catch(error => {
+                console.error('註冊請求錯誤:', error);
+                alert('註冊請求發生錯誤，傳訊息給81226請他打開伺服器');
+            });
+        }
+
+        // 更改密碼函數
+        function changePassword() {
+            // === 修改點 3: 檢查是否已登入 ===
+            if (!currentLoggedInUser) {
+                alert('請先登入後再更改密碼！');
+                showLogin(); // 可以選擇跳回登入頁面
+                return; // 如果沒有登入者資訊，就停止執行
+            }
+            // ============================
+
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            // 基本的前端驗證
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                 alert('所有密碼欄位都必須填寫！');
+                 return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                alert('新密碼與確認密碼不符！');
+                return;
+            }
+
+            // === 修改點 4: 使用儲存的 username ===
+            const data = {
+                username: currentLoggedInUser, // 使用儲存的登入者 username
+                currentPassword: currentPassword,
+                newPassword: newPassword
+            };
+            // ============================
+
+            fetch('/change-password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('密碼更改成功！');
+                    // 清空更改密碼的輸入框
+                    document.getElementById('currentPassword').value = '';
+                    document.getElementById('newPassword').value = '';
+                    document.getElementById('confirmPassword').value = '';
+                     // 可以在這裡選擇是否需要重新登入，或者保持登入狀態
+                } else {
+                    response.text().then(text => alert('更改密碼失敗：' + text));
+                }
+            })
+            .catch(error => {
+                console.error('更改密碼請求錯誤:', error);
+                alert('更改密碼請求發生錯誤，傳訊息給81226請他打開伺服器');
+            });
+        }
+
+        // 登出函數 (簡單版本)
+        function logout() {
+            currentLoggedInUser = null; // 清除前端儲存的使用者資訊
+            alert('您已成功登出。');
+            showLogin(); // 顯示登入畫面
+             // 清空更改密碼的輸入框 (如果需要)
+             document.getElementById('currentPassword').value = '';
+             document.getElementById('newPassword').value = '';
+             document.getElementById('confirmPassword').value = '';
+        }
+
+         // 頁面載入時，預設顯示登入區塊
+         window.onload = function() {
+             showLogin();
+         };
+
+    </script>
+</body>
+</html>
