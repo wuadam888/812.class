@@ -89,6 +89,33 @@
             padding: 10px;
             background-color: #f9f9f9;
             border-radius: 4px;
+            position: relative;
+        }
+        .admin-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .delete-button {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .delete-button:hover {
+            background-color: #cc0000;
+        }
+        .admin-badge {
+            background-color: #ff9800;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            margin-left: 5px;
+            display: inline-block;
         }
     </style>
 </head>
@@ -130,8 +157,9 @@
     </div>
 
     <script>
-        // 儲存登入者的 username
+        // 儲存登入者的資訊
         let currentLoggedInUser = null;
+        let isAdmin = false;
 
         // 顯示登入區塊的函數
         function showLogin() {
@@ -154,10 +182,13 @@
             document.getElementById('changePasswordSection').style.display = 'block';
             document.getElementById('blogSection').style.display = 'block'; // 顯示部落格區域
             
-            // 顯示歡迎訊息
-            if (currentLoggedInUser) {
-                document.getElementById('welcomeMessage').innerText = `歡迎， ${currentLoggedInUser}!`;
+            // 顯示歡迎訊息，如果是管理員則顯示特別標記
+            let welcomeText = `歡迎，${currentLoggedInUser}`;
+            if (isAdmin) {
+                welcomeText += ' (管理員)';
             }
+            welcomeText += '!';
+            document.getElementById('welcomeMessage').innerText = welcomeText;
             
             // 獲取文章列表
             fetchPosts();
@@ -180,31 +211,27 @@
             })
             .then(response => {
                 if (response.ok) {
-                    currentLoggedInUser = username;
-                    alert('登入成功！');
-                    showChangePassword(); // 顯示更改密碼區塊
-                    document.getElementById('loginUsername').value = '';
-                    document.getElementById('loginPassword').value = '';
+                    return response.json();
                 } else {
-                    currentLoggedInUser = null;
                     // 嘗試讀取後端的回應文字
-                    response.text().then(text => {
-                         // 檢查後端是否真的有回傳文字訊息
-                         if (text) {
-                            alert('登入失敗：' + text);
-                         } else {
-                            alert('登入失敗：伺服器未提供錯誤訊息 (狀態碼: ' + response.status + ')');
-                         }
-                    }).catch(() => {
-                        // 如果連文字都讀取失敗
-                        alert('登入失敗：無法讀取伺服器回應 (狀態碼: ' + response.status + ')');
+                    return response.text().then(text => {
+                        throw new Error(text || `登入失敗 (狀態碼: ${response.status})`);
                     });
                 }
             })
+            .then(data => {
+                currentLoggedInUser = data.username;
+                isAdmin = data.isAdmin;
+                alert('登入成功！');
+                showChangePassword(); // 顯示更改密碼區塊
+                document.getElementById('loginUsername').value = '';
+                document.getElementById('loginPassword').value = '';
+            })
             .catch(error => {
                 currentLoggedInUser = null;
-                console.error('登入請求錯誤:', error); // 在 Console 顯示詳細錯誤
-                alert('登入請求發生錯誤：無法連接到伺服器或網路問題。請檢查伺服器狀態、網路連線及瀏覽器 Console 中的詳細錯誤。');
+                isAdmin = false;
+                console.error('登入請求錯誤:', error);
+                alert('登入失敗：' + error.message);
             });
         }
 
@@ -270,6 +297,7 @@
         // 登出函數
         function logout() {
             currentLoggedInUser = null; // 清除前端儲存的使用者資訊
+            isAdmin = false; // 清除管理員狀態
             alert('您已成功登出。');
             showLogin(); // 顯示登入畫面
         }
@@ -285,16 +313,29 @@
                     data.forEach(post => {
                         const postElement = document.createElement('div');
                         postElement.classList.add('post');
-                        postElement.innerHTML = `
+                        
+                        // 創建文章內容
+                        let postHtml = `
                             <p><strong>${post.author}</strong> - ${post.date}</p>
                             <p>${post.content}</p>
-                            <hr>
                         `;
+                        
+                        // 如果當前用戶是管理員，添加刪除按鈕
+                        if (isAdmin) {
+                            postHtml += `
+                                <div class="admin-controls">
+                                    <button class="delete-button" onclick="deletePost('${post.id}')">刪除</button>
+                                </div>
+                            `;
+                        }
+                        
+                        postElement.innerHTML = postHtml;
                         postsContainer.appendChild(postElement);
                     });
                 })
                 .catch(error => {
                     console.error('獲取文章失敗:', error);
+                    alert('獲取文章失敗：請檢查網路連線或伺服器狀態。');
                 });
         }
 
@@ -318,13 +359,49 @@
                     document.getElementById('postContent').value = '';
                     fetchPosts(); // 重新獲取文章列表
                 } else {
-                    alert('文章發布失敗');
+                    response.text().then(text => {
+                        alert('文章發布失敗：' + (text || '未知錯誤'));
+                    }).catch(() => {
+                        alert('文章發布失敗：伺服器錯誤');
+                    });
                 }
             })
             .catch(error => {
                 console.error('發布文章請求錯誤:', error);
-                alert('發布文章請求發生錯誤');
+                alert('發布文章請求發生錯誤：無法連接到伺服器或網路問題。');
             });
+        }
+        
+        // 刪除文章 (僅管理員可用)
+        function deletePost(postId) {
+            if (!currentLoggedInUser || !isAdmin) {
+                alert('只有管理員可以刪除文章！');
+                return;
+            }
+            
+            if (confirm('確定要刪除這篇文章嗎？此操作無法撤銷。')) {
+                fetch(`https://eight12-class.onrender.com/posts/${postId}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: currentLoggedInUser })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert('文章已成功刪除！');
+                        fetchPosts(); // 重新獲取文章列表
+                    } else {
+                        response.text().then(text => {
+                            alert('刪除文章失敗：' + (text || '未知錯誤'));
+                        }).catch(() => {
+                            alert('刪除文章失敗：伺服器錯誤');
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('刪除文章請求錯誤:', error);
+                    alert('刪除文章請求發生錯誤：無法連接到伺服器或網路問題。');
+                });
+            }
         }
 
         // 頁面載入時，預設顯示登入區塊
