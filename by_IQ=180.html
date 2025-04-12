@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>812官方網站By IQ=180</title> <style>
+    <title>812官方網站By IQ=180</title>
+    <style>
         /* --- 這裡的 CSS 樣式保持和您原本檔案一致 --- */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -135,7 +136,7 @@
              }
         }
 
-        // 登入函數 (已修改)
+        // 登入函數 (已修改 fetch URL)
         function login() {
             const username = document.getElementById('loginUsername').value;
             const password = document.getElementById('loginPassword').value;
@@ -145,46 +146,50 @@
                 return;
             }
 
-            fetch('/login', {
+            // --- 修改點 1: 使用 Render 的完整 URL ---
+            fetch('https://eight12-class.onrender.com/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password })
             })
             .then(response => {
                 if (response.ok) {
-                    // === 修改: 登入成功時儲存 username ===
                     currentLoggedInUser = username;
-
                     alert('登入成功！');
                     showChangePassword(); // 顯示更改密碼區塊
-                    // 清空登入表單
                     document.getElementById('loginUsername').value = '';
                     document.getElementById('loginPassword').value = '';
                 } else {
-                    // === 修改: 登入失敗時清除 username ===
                     currentLoggedInUser = null;
-                    response.text().then(text => alert('登入失敗：' + text));
+                    // 嘗試讀取後端的回應文字
+                    response.text().then(text => {
+                         // 檢查後端是否真的有回傳文字訊息
+                         if (text) {
+                            alert('登入失敗：' + text);
+                         } else {
+                            alert('登入失敗：伺服器未提供錯誤訊息 (狀態碼: ' + response.status + ')');
+                         }
+                    }).catch(() => {
+                        // 如果連文字都讀取失敗
+                        alert('登入失敗：無法讀取伺服器回應 (狀態碼: ' + response.status + ')');
+                    });
                 }
             })
             .catch(error => {
-                // === 修改: 請求錯誤時清除 username ===
                 currentLoggedInUser = null;
-                console.error('登入請求錯誤:', error);
-                alert('登入請求發生錯誤');
+                console.error('登入請求錯誤:', error); // 在 Console 顯示詳細錯誤
+                // 提示使用者更可能的原因
+                alert('登入請求發生錯誤：無法連接到伺服器或網路問題。請檢查伺服器狀態、網路連線及瀏覽器 Console 中的詳細錯誤。');
             });
         }
 
-        // 註冊函數已被移除 (register)
-
-        // 更改密碼函數 (已修改)
+        // 更改密碼函數 (已修改 fetch URL)
         function changePassword() {
-            // === 修改: 檢查是否已登入 ===
             if (!currentLoggedInUser) {
                 alert('請先登入後再更改密碼！');
-                showLogin(); // 跳回登入頁面
+                showLogin();
                 return;
             }
-            // ============================
 
             const currentPassword = document.getElementById('currentPassword').value;
             const newPassword = document.getElementById('newPassword').value;
@@ -200,15 +205,14 @@
                 return;
             }
 
-            // === 修改: 使用儲存的 username ===
             const data = {
                 username: currentLoggedInUser,
                 currentPassword: currentPassword,
                 newPassword: newPassword
             };
-            // ============================
 
-            fetch('/change-password', {
+            // --- 修改點 2: 使用 Render 的完整 URL ---
+            fetch('https://eight12-class.onrender.com/change-password', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
@@ -216,17 +220,26 @@
             .then(response => {
                 if (response.ok) {
                     alert('密碼更改成功！');
-                    // 清空更改密碼的輸入框
                     document.getElementById('currentPassword').value = '';
                     document.getElementById('newPassword').value = '';
                     document.getElementById('confirmPassword').value = '';
                 } else {
-                    response.text().then(text => alert('更改密碼失敗：' + text));
+                     // 嘗試讀取後端的回應文字
+                     response.text().then(text => {
+                         if (text) {
+                            alert('更改密碼失敗：' + text);
+                         } else {
+                            alert('更改密碼失敗：伺服器未提供錯誤訊息 (狀態碼: ' + response.status + ')');
+                         }
+                     }).catch(() => {
+                        // 如果連文字都讀取失敗
+                        alert('更改密碼失敗：無法讀取伺服器回應 (狀態碼: ' + response.status + ')');
+                     });
                 }
             })
             .catch(error => {
-                console.error('更改密碼請求錯誤:', error);
-                alert('更改密碼請求發生錯誤');
+                console.error('更改密碼請求錯誤:', error); // 在 Console 顯示詳細錯誤
+                alert('更改密碼請求發生錯誤：無法連接到伺服器或網路問題。請檢查伺服器狀態、網路連線及瀏覽器 Console 中的詳細錯誤。');
             });
         }
 
