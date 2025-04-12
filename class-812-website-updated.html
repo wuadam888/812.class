@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IQ=180的812官網</title>
+  <style>
+    :root {
+      --primary-color: #2c6dd5;
+      --secondary-color: #0d4190;
+      --light-color: #ffffff;
+      --dark-color: #333333;
+      --border-color: #eeeeee;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--light-color);
+      color: var(--dark-color);
+      min-height: 100vh;
+    }
+
+    header {
+      background-color: var(--primary-color);
+      padding: 1rem 2rem;
+      text-align: center;
+      color: var(--light-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .site-title {
+      font-size: 2rem;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .login-link {
+      background-color: var(--light-color);
+      color: var(--primary-color);
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      text-decoration: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .menu-container {
+      position: relative;
+    }
+
+    .menu-icon {
+      width: 30px;
+      height: 25px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .menu-icon span {
+      display: block;
+      height: 3px;
+      background: var(--light-color);
+      margin: 5px 0;
+      border-radius: 2px;
+      transition: 0.4s;
+    }
+
+    .menu-icon.open span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+    .menu-icon.open span:nth-child(2) {
+      opacity: 0;
+    }
+    .menu-icon.open span:nth-child(3) {
+      transform: rotate(-45deg) translate(6px, -6px);
+    }
+
+    nav {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 200px;
+      background-color: var(--light-color);
+      border: 1px solid var(--border-color);
+      border-radius: 0 0 5px 0;
+      z-index: 100;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    }
+
+    nav.show {
+      display: block;
+    }
+
+    nav a {
+      display: block;
+      padding: 0.8rem 1rem;
+      text-decoration: none;
+      color: var(--primary-color);
+      border-bottom: 1px solid var(--border-color);
+      transition: background-color 0.3s;
+    }
+
+    nav a:hover {
+      background-color: #f5f5f5;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .blog-container {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .post-form {
+      background-color: #f9f9f9;
+      padding: 1.5rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 2rem;
+    }
+
+    .post-form h3 {
+      margin-top: 0;
+      color: var(--secondary-color);
+    }
+
+    .post-form textarea {
+      width: 100%;
+      height: 100px;
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+      resize: vertical;
+    }
+
+    .post-form button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .post-form button:hover {
+      background-color: var(--secondary-color);
+    }
+
+    .login-reminder {
+      background-color: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+      color: var(--primary-color);
+      margin-bottom: 2rem;
+    }
+
+    .login-reminder button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 0.5rem;
+    }
+
+    .post {
+      background-color: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .post-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+
+    .post-author {
+      font-weight: bold;
+      color: var(--secondary-color);
+    }
+
+    .post-date {
+      color: #777;
+      font-size: 0.9rem;
+    }
+
+    .post-content {
+      line-height: 1.6;
+    }
+
+    .delete-btn {
+      background-color: #ff4444;
+      color: white;
+      border: none;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background-color: white;
+      padding: 2rem;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 400px;
+      position: relative;
+    }
+
+    .modal h3 {
+      margin-top: 0;
+      color: var(--secondary-color);
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
+      border: none;
+      color: var(--dark-color);
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: bold;
+      padding: 0.2rem 0.5rem;
+    }
+
+    .close-btn:hover {
+      color: var(--primary-color);
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .btn-group {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+    }
+
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .btn-secondary {
+      background-color: #ddd;
+      color: var(--dark-color);
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .profile-container {
+      display: none;
+      background-color: white;
+      padding: 2rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .profile-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .profile-title {
+      font-size: 1.5rem;
+      color: var(--secondary-color);
+      margin: 0;
+    }
+
+    .logout-btn {
+      background-color: #ff4444;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="menu-container">
+      <div class="menu-icon" onclick="toggleMenu(this)">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <nav id="nav">
+        <a href="https://wuadam888.github.io/little.light.head/little.html" target="_blank">小光頭企業</a>
+      </nav>
+    </div>
+    <h1 class="site-title">IQ=180的812</h1>
+    <a class="login-link" onclick="toggleLoginModal()">登入</a>
+  </header>
+
+  <div class="container">
+    <div class="blog-container" id="blog-content">
+      <div id="post-area">
+        <!-- 登入提示或發布文章表單將顯示在這裡 -->
+      </div>
+      <!-- 貼文會顯示在這裡 -->
+      <div id="posts-container"></div>
+    </div>
+
+    <div class="profile-container" id="profile-container">
+      <div class="profile-header">
+        <h2 class="profile-title">個人資料</h2>
+        <button class="logout-btn" onclick="logout()">登出</button>
+      </div>
+      <div class="form-group">
+        <label>帳號: <span id="profile-username"></span></label>
+      </div>
+      <div class="form-group">
+        <label for="new-password">新密碼:</label>
+        <input type="password" id="new-password">
+      </div>
+      <div class="form-group">
+        <label for="confirm-password">確認密碼:</label>
+        <input type="password" id="confirm-password">
+      </div>
+      <div class="btn-group">
+        <button class="btn-primary" onclick="changePassword()">變更密碼</button>
+        <button class="btn-secondary" onclick="backToBlog()">返回部落格</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="login-modal">
+    <div class="modal-content">
+      <h3>登入</h3>
+      <button class="close-btn" onclick="closeLoginModal()">關閉</button>
+      <div class="form-group">
+        <label for="username">帳號:</label>
+        <input type="text" id="username" placeholder="請輸入帳號">
+      </div>
+      <div class="form-group">
+        <label for="password">密碼:</label>
+        <input type="password" id="password" placeholder="請輸入密碼">
+      </div>
+      <div class="btn-group">
+        <button class="btn-primary" onclick="login()">登入</button>
+        <button class="btn-secondary" onclick="closeLoginModal()">取消</button>
+      </div>
+    </div>
+  </div>
+<script>
+const API_BASE_URL = 'https://eight12-class.onrender.com';
+
+// 用戶帳號資料（僅用於前端初始化，實際驗證交給後端）
+const accounts = [
+  { username: '81201', password: '123456', isAdmin: false },
+  { username: '81202', password: '123456', isAdmin: false },
+  { username: '81203', password: '123456', isAdmin: false },
+  { username: '81206', password: '123456', isAdmin: false },
+  { username: '81208', password: '123456', isAdmin: false },
+  { username: '81209', password: '123456', isAdmin: false },
+  { username: '81213', password: '123456', isAdmin: false },
+  { username: '81226', password: '123456', isAdmin: true },
+  { username: '81227', password: '123456', isAdmin: false },
+  { username: '81229', password: '123456', isAdmin: false },
+  { username: '81230', password: '123456', isAdmin: false },
+  { username: '81231', password: '123456', isAdmin: false },
+  { username: '81232', password: '123456', isAdmin: false },
+  { username: '81233', password: '123456', isAdmin: false },
+  { username: '81234', password: '123456', isAdmin: false },
+  { username: '81237', password: '123456', isAdmin: false }
+];
+
+// 初始化貼文資料
+let posts = [];
+let currentUser = null;
+
+// 初始化貼文資料
+async function initializeData() {
+  try {
+    // 從後端 API 取得貼文
+    const response = await fetch(`${API_BASE_URL}/posts`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`無法取得貼文：${response.status}`);
+    }
+
+    posts = await response.json();
+
+    // 從 localStorage 載入當前用戶
+    const savedUser = localStorage.getItem('812_currentUser');
+    if (savedUser) {
+      currentUser = JSON.parse(savedUser);
+      updateUIBasedOnLogin();
+    } else {
+      updateUIBasedOnLogin();
+    }
+
+    displayPosts();
+  } catch (error) {
+    console.error('初始化資料失敗：', error);
+    alert('無法載入貼文，請稍後再試');
+  }
+}
+
+// 保存資料到 localStorage
+function saveData() {
+  localStorage.setItem('812_posts', JSON.stringify(posts));
+  localStorage.setItem('812_accounts', JSON.stringify(accounts));
+  if (currentUser) {
+    localStorage.setItem('812_currentUser', JSON.stringify(currentUser));
+  } else {
+    localStorage.removeItem('812_currentUser');
+  }
+}
+
+// 切換選單顯示/隱藏
+function toggleMenu(icon) {
+  icon.classList.toggle('open');
+  document.getElementById('nav').classList.toggle('show');
+}
+
+// 點擊其他地方時隱藏選單
+document.addEventListener('click', function(event) {
+  const nav = document.getElementById('nav');
+  const menuIcon = document.querySelector('.menu-icon');
+  
+  if (!menuIcon.contains(event.target) && !nav.contains(event.target)) {
+    nav.classList.remove('show');
+    menuIcon.classList.remove('open');
+  }
+});
+
+// 打開登入模態框
+function toggleLoginModal() {
+  if (currentUser) {
+    showProfilePage();
+  } else {
+    document.getElementById('login-modal').classList.add('show');
+  }
+}
+
+// 關閉登入模態框
+function closeLoginModal() {
+  const modal = document.getElementById('login-modal');
+  modal.classList.remove('show');
+  // 清空輸入框並移除焦點
+  const usernameInput = document.getElementById('username');
+  const passwordInput = document.getElementById('password');
+  usernameInput.value = '';
+  passwordInput.value = '';
+  usernameInput.blur();
+  passwordInput.blur();
+}
+
+// 用戶登入
+async function login() {
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username, password }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`登入失敗：${response.status}`);
+    }
+
+    const data = await response.json();
+    currentUser = {
+      username: data.username || username,
+      isAdmin: data.isAdmin || false,
+    };
+
+    saveData();
+    closeLoginModal();
+    updateUIBasedOnLogin();
+  } catch (error) {
+    console.error('登入錯誤：', error);
+    alert('帳號或密碼錯誤，請重試');
+  }
+}
+
+// 用戶登出
+function logout() {
+  currentUser = null;
+  saveData();
+  updateUIBasedOnLogin();
+  showBlogPage();
+}
+
+// 更新發布區域
+function updatePostArea() {
+  const postArea = document.getElementById('post-area');
+  
+  if (currentUser) {
+    postArea.innerHTML = `
+      <div class="post-form">
+        <h3>發布新貼文</h3>
+        <textarea id="post-text" placeholder="在這裡輸入您的貼文內容..."></textarea>
+        <button onclick="createPost()">發布</button>
+      </div>
+    `;
+  } else {
+    postArea.innerHTML = `
+      <div class="login-reminder">
+        <p>請先登入才能發布貼文</p>
+        <button onclick="toggleLoginModal()">立即登入</button>
+      </div>
+    `;
+  }
+}
+
+// 根據登入狀態更新 UI
+function updateUIBasedOnLogin() {
+  const loginLink = document.querySelector('.login-link');
+  
+  if (currentUser) {
+    loginLink.textContent = currentUser.username;
+  } else {
+    loginLink.textContent = '登入';
+  }
+  
+  updatePostArea();
+  displayPosts();
+}
+
+// 顯示個人資料頁面
+function showProfilePage() {
+  document.getElementById('blog-content').style.display = 'none';
+  document.getElementById('profile-container').style.display = 'block';
+  document.getElementById('profile-username').textContent = currentUser.username;
+}
+
+// 返回部落格頁面
+function backToBlog() {
+  document.getElementById('profile-container').style.display = 'none';
+  document.getElementById('blog-content').style.display = 'flex';
+}
+
+// 顯示部落格頁面
+function showBlogPage() {
+  document.getElementById('profile-container').style.display = 'none';
+  document.getElementById('blog-content').style.display = 'flex';
+}
+
+// 更改密碼
+async function changePassword() {
+  const newPassword = document.getElementById('new-password').value;
+  const confirmPassword = document.getElementById('confirm-password').value;
+
+  if (!newPassword || newPassword !== confirmPassword) {
+    alert('新密碼與確認密碼不一致');
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/password`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: currentUser.username,
+        newPassword,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`更改密碼失敗：${response.status}`);
+    }
+
+    alert('密碼已更改成功');
+    document.getElementById('new-password').value = '';
+    document.getElementById('confirm-password').value = '';
+  } catch (error) {
+    console.error('更改密碼錯誤：', error);
+    alert('更改密碼失敗，請稍後再試');
+  }
+}
+
+// 創建新貼文
+async function createPost() {
+  if (!currentUser) {
+    alert('請先登入才能發布貼文');
+    toggleLoginModal();
+    return;
+  }
+
+  const content = document.getElementById('post-text').value.trim();
+  if (!content) {
+    alert('貼文內容不能為空');
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/posts`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        author: currentUser.username,
+        content,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`發布貼文失敗：${response.status}`);
+    }
+
+    const newPost = await response.json();
+    posts.unshift(newPost);
+    saveData();
+    displayPosts();
+
+    document.getElementById('post-text').value = '';
+  } catch (error) {
+    console.error('創建貼文錯誤：', error);
+    alert('發布貼文失敗，請稍後再試');
+  }
+}
+
+// 刪除貼文
+async function deletePost(postId) {
+  if (!currentUser) return;
+
+  const postIndex = posts.findIndex(post => post.id === postId);
+  if (postIndex === -1) return;
+
+  const post = posts[postIndex];
+
+  if (currentUser.isAdmin || post.author === currentUser.username) {
+    if (confirm('確定要刪除這篇貼文嗎？')) {
+      try {
+        const response = await fetch(`${API_BASE_URL}/posts/${postId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`刪除貼文失敗：${response.status}`);
+        }
+
+        posts.splice(postIndex, 1);
+        saveData();
+        displayPosts();
+      } catch (error) {
+        console.error('刪除貼文錯誤：', error);
+        alert('刪除貼文失敗，請稍後再試');
+      }
+    }
+  }
+}
+
+// 顯示所有貼文
+function displayPosts() {
+  const postsContainer = document.getElementById('posts-container');
+  postsContainer.innerHTML = '';
+  
+  if (posts.length === 0) {
+    postsContainer.innerHTML = '<p>目前還沒有貼文，趕快發布第一篇吧！</p>';
+    return;
+  }
+  
+  posts.forEach(post => {
+    const postElement = document.createElement('div');
+    postElement.className = 'post';
+    
+    let deleteButton = '';
+    if (currentUser && (currentUser.isAdmin || post.author === currentUser.username)) {
+      deleteButton = `<button class="delete-btn" onclick="deletePost(${post.id})">刪除</button>`;
+    }
+    
+    postElement.innerHTML = `
+      <div class="post-header">
+        <span class="post-author">${post.author}</span>
+        <span class="post-date">${post.date}</span>
+      </div>
+      <div class="post-content">${post.content.replace(/\n/g, '<br>')}</div>
+      ${deleteButton}
+    `;
+    
+    postsContainer.appendChild(postElement);
+  });
+}
+
+// 頁面載入時初始化
+window.onload = initializeData;
+</script>
+
+ </body>
+</html>
