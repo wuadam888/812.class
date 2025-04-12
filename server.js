@@ -6,8 +6,7 @@ const app = express();
 app.use(cors()); // 允許所有跨來源請求 (開發時方便，正式環境可能要設定更嚴謹)
 app.use(express.json()); // 讓 Express 能夠解析請求中 JSON 格式的資料
 
-// --- 暫時用記憶體儲存資料 (注意：伺服器重啟資料會消失！) ---
-// 把原本在 HTML 裡的帳號搬過來
+//用戶資料
 let accounts = [
       { username: '81201', password: '123456', isAdmin: false },
       { username: '81202', password: '221102', isAdmin: false },
@@ -18,7 +17,7 @@ let accounts = [
       { username: '81210', password: '123456', isAdmin: false },
       { username: '81211', password: '123456', isAdmin: false },
       { username: '81213', password: '123456', isAdmin: false },
-      { username: '81226', password: '310721', isAdmin: true },
+      { username: '81226-admin', password: '310721', isAdmin: true },
       { username: '81227', password: '123456', isAdmin: false },
       { username: '81229', password: '123456', isAdmin: false },
       { username: '81230', password: '123456', isAdmin: false },
