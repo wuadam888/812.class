@@ -1,15 +1,20 @@
 {
-  // ... (其他頂層欄位) ...
-
-  "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.19.2"
-  }, // <--- 在這裡加上逗號
-
+  "name": "class-812-backend",
+  "version": "1.0.0",
+  "description": "Backend API for class 812 website",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
-  }  // <--- 把這裡的逗號刪掉 (假設後面沒其他頂層欄位了)
-
-  // ... (其他頂層欄位) ...
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
