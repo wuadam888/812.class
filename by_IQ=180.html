@@ -151,7 +151,7 @@
                 <button onclick="submitPost()">發布</button>
             </div>
             <div id="postsContainer" style="margin-top: 20px;">
-                <!-- 這裡將通過JavaScript動態顯示文章 -->
+                //通過JavaScript動態顯示文章
             </div>
         </div>
     </div>
@@ -182,7 +182,7 @@
             document.getElementById('changePasswordSection').style.display = 'block';
             document.getElementById('blogSection').style.display = 'block'; // 顯示部落格區域
             
-            // 顯示歡迎訊息，如果是管理員則顯示特別標記
+            // 顯示歡迎訊息，如果是管理員特別標記
             let welcomeText = `歡迎，${currentLoggedInUser}`;
             if (isAdmin) {
                 welcomeText += ' (管理員)';
@@ -283,7 +283,7 @@
                             alert('更改密碼失敗：伺服器未提供錯誤訊息 (狀態碼: ' + response.status + ')');
                          }
                      }).catch(() => {
-                        // 如果連文字都讀取失敗
+                        // 文字讀取失敗
                         alert('更改密碼失敗：無法讀取伺服器回應 (狀態碼: ' + response.status + ')');
                      });
                 }
@@ -320,7 +320,7 @@
                             <p>${post.content}</p>
                         `;
                         
-                        // 如果當前用戶是管理員，添加刪除按鈕
+                        // 如果是管理員，添加刪除按鈕
                         if (isAdmin) {
                             postHtml += `
                                 <div class="admin-controls">
