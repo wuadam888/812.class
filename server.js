@@ -104,6 +104,32 @@ app.post('/change-password', (req, res) => {
   res.json({ message: '密碼更改成功' });
 });
 
+// 刪除文章 API (只有管理員可以使用)
+app.delete('/posts/:id', (req, res) => {
+  const { id } = req.params;
+  const { username } = req.body;
+  
+  // 查找用戶並檢查是否為管理員
+  const account = accounts.find(acc => acc.username === username);
+  
+  if (!account || !account.isAdmin) {
+    return res.status(403).json({ message: '權限不足：只有管理員可以刪除文章' });
+  }
+  
+  // 查找文章
+  const postIndex = posts.findIndex(post => post.id.toString() === id);
+  
+  if (postIndex === -1) {
+    return res.status(404).json({ message: '找不到該文章' });
+  }
+  
+  // 刪除文章
+  posts.splice(postIndex, 1);
+  console.log('Post deleted by admin:', username, 'Post ID:', id);
+  
+  res.json({ message: '文章已成功刪除' });
+});
+
 // --- 啟動伺服器 ---
 const PORT = process.env.PORT || 3000; // Render 會提供 PORT 環境變數
 app.listen(PORT, () => {
