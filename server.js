@@ -80,7 +80,29 @@ app.post('/posts', (req, res) => {
   res.status(201).json(newPost);
 });
 
-// **(其他 API，例如刪除文章、改密碼，可以之後再加)**
+// 更改密碼 API
+app.post('/change-password', (req, res) => {
+  const { username, currentPassword, newPassword } = req.body;
+  
+  // 驗證請求中是否包含所有必要欄位
+  if (!username || !currentPassword || !newPassword) {
+    return res.status(400).json({ message: '缺少必要欄位' });
+  }
+  
+  // 查找用戶並驗證當前密碼
+  const userIndex = accounts.findIndex(acc => 
+    acc.username === username && acc.password === currentPassword);
+  
+  if (userIndex === -1) {
+    return res.status(401).json({ message: '用戶名或當前密碼錯誤' });
+  }
+  
+  // 更新密碼
+  accounts[userIndex].password = newPassword;
+  console.log('Password changed for:', username);
+  
+  res.json({ message: '密碼更改成功' });
+});
 
 // --- 啟動伺服器 ---
 const PORT = process.env.PORT || 3000; // Render 會提供 PORT 環境變數
