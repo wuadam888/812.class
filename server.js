@@ -3,8 +3,8 @@ const cors = require('cors');
 const app = express();
 
 // --- 中介軟體 (Middleware) ---
-app.use(cors()); // 允許所有跨來源請求 (開發時方便，正式環境可能要設定更嚴謹)
-app.use(express.json()); // 讓 Express 能夠解析請求中 JSON 格式的資料
+app.use(cors()); // 允許所有跨來源請求IQ180
+app.use(express.json()); // 讓 Express 能請求中 JSON 格式的資料
 
 //用戶資料
 let accounts = [
@@ -47,11 +47,11 @@ app.post('/login', (req, res) => {
 
   if (account) {
     console.log('Login successful for:', username);
-    // 只回傳必要的用戶資訊，不要回傳密碼！
+    // 只回傳必要的用戶資訊
     res.json({ username: account.username, isAdmin: account.isAdmin });
   } else {
     console.log('Login failed for:', username);
-    // 使用 401 Unauthorized 狀態碼表示驗證失敗
+    // 使用 401 Unauthorized 狀態碼表示驗證失敗(LOL)
     res.status(401).json({ message: '帳號或密碼錯誤' });
   }
 });
@@ -64,7 +64,7 @@ app.get('/posts', (req, res) => {
 
 // 新增文章 API
 app.post('/posts', (req, res) => {
-  // **注意：** 這裡需要驗證使用者是否登入！
+  // 驗證輸入
   // 暫時先假設前端會傳送 author 過來，之後要改成用 token 驗證
   const { content, author } = req.body;
   if (!content || !author) {
