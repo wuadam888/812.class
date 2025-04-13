@@ -13,6 +13,7 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
+            padding-top: 60px; /* Add padding to prevent overlap with fixed menu */
         }
         .container {
             background-color: #fff;
@@ -35,7 +36,7 @@
             font-weight: bold;
         }
         input[type="text"], input[type="password"], textarea {
-            width: calc(100% - 20px);
+            width: calc(100% - 22px); /* Adjusted for padding */
             padding: 10px;
             margin-bottom: 15px;
             border: 1px solid #ccc;
@@ -65,6 +66,24 @@
             cursor: pointer;
             font-size: 0.9rem;
         }
+         .toggle-link.inline { /* Style for back button */
+            display: inline-block;
+            margin-top: 10px;
+            margin-right: 15px; /* Add some space between buttons */
+            padding: 8px 15px; /* Button-like padding */
+            background-color: #6c757d; /* Grey background */
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+             width: auto; /* Override full width */
+             font-size: 0.9rem;
+             border: none; /* Remove border if any */
+             cursor: pointer;
+        }
+        .toggle-link.inline:hover {
+            background-color: #5a6268;
+            text-decoration: none;
+        }
         .toggle-link:hover {
             text-decoration: underline;
         }
@@ -74,14 +93,18 @@
             border-top: 1px solid #eee;
         }
         /* 初始隱藏區塊 */
-        #changePasswordSection, #blogSection {
+        #changePasswordSection, #blogSection, #loggedInHeader {
             display: none;
         }
-        #welcomeMessage {
-            margin-top: 15px;
+        #loggedInHeader { /* Style for welcome message area */
             color: green;
             font-weight: bold;
             margin-bottom: 15px;
+             padding: 10px;
+             background-color: #e9f5e9;
+             border-radius: 4px;
+             border-left: 5px solid green;
+             text-align: left;
         }
         .post {
             margin-bottom: 15px;
@@ -90,20 +113,21 @@
             background-color: #f9f9f9;
             border-radius: 4px;
             position: relative;
+            border: 1px solid #eee;
         }
         .admin-controls {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 5px; /* Adjusted position */
+            right: 5px;
         }
         .delete-button {
             background-color: #ff4d4d;
             color: white;
             border: none;
             border-radius: 4px;
-            padding: 5px 10px;
+            padding: 3px 8px; /* Smaller padding */
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.75rem; /* Smaller font */
         }
         .delete-button:hover {
             background-color: #cc0000;
@@ -117,25 +141,69 @@
             margin-left: 5px;
             display: inline-block;
         }
+         /* Menu Styles */
+        #menuContainer {
+             position: fixed; /* Changed to fixed */
+             top: 10px;
+             right: 10px;
+             z-index: 1000; /* Ensure it's on top */
+        }
+        #menuToggle {
+            padding: 8px 12px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+         #menuToggle:hover {
+             background-color: #0056b3;
+         }
+        #dropdownMenu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 45px; /* Adjusted position */
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+            min-width: 150px; /* Ensure minimum width */
+        }
+         #dropdownMenu button, #dropdownMenu a {
+            display: block;
+            width: 100%;
+            border: none;
+            background: none;
+            padding: 12px 15px; /* Increased padding */
+            cursor: pointer;
+            text-align: left; /* Align text left */
+            font-size: 0.95rem;
+             color: #333;
+             text-decoration: none; /* Remove underline from link */
+             box-sizing: border-box; /* Include padding in width */
+        }
+        #dropdownMenu button:hover, #dropdownMenu a:hover {
+             background-color: #f0f0f0; /* Hover effect */
+        }
+         #accountSettingsButton {
+             /* Initially hidden by JS */
+             display: none;
+         }
+
     </style>
 </head>
 <body>
- <div style="position: absolute; top: 20px; right: 20px; z-index: 999;">
+ <div id="menuContainer">
   <button id="menuToggle" onclick="toggleMenu()">≡</button>
-  <div id="dropdownMenu" style="display: none; position: absolute; right: 0; top: 40px; background: white; border: 1px solid #ccc; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.15);">
-    <button onclick="showChangePassword()" style="display: block; width: 100%; border: none; background: none; padding: 10px; cursor: pointer;">帳號設定</button>
-    <a href="https://wuadam888.github.io/little.light.head/little.html" target="_blank" style="display: block; text-decoration: none; padding: 10px; color: black;">小光頭企業</a>
+  <div id="dropdownMenu">
+    <button id="accountSettingsButton" onclick="showPasswordChangeForm(); toggleMenu();">帳號設定</button>
+    <a href="https://wuadam888.github.io/little.light.head/little.html" target="_blank" onclick="toggleMenu()">小光頭企業</a>
+     <button id="logoutButton" style="display: none;" onclick="logout(); toggleMenu();">登出</button>
   </div>
-</div><script>
-let menuOpen = false;
-function toggleMenu() {
-  const menu = document.getElementById('dropdownMenu');
-  const toggle = document.getElementById('menuToggle');
-  menuOpen = !menuOpen;
-  menu.style.display = menuOpen ? 'block' : 'none';
-  toggle.innerText = menuOpen ? '×' : '≡';
-}
-</script>
+</div>
+
     <div class="container">
         <div id="loginSection">
             <h2>歡迎來到812官方網站!</h2>
@@ -146,9 +214,21 @@ function toggleMenu() {
             <button onclick="login()">登入</button>
         </div>
 
+        <div id="loggedInContent">
+            <div id="loggedInHeader"></div> <div id="blogSection" class="section">
+                <h2>發文區</h2>
+                <div id="postForm">
+                    <label for="postContent">發布新文章:</label>
+                    <textarea id="postContent" rows="4"></textarea>
+                    <button onclick="submitPost()">發布</button>
+                </div>
+                <div id="postsContainer" style="margin-top: 20px;">
+                    </div>
+            </div>
+        </div>
+
         <div id="changePasswordSection" class="section">
             <h2>更改密碼</h2>
-            <div id="welcomeMessage"></div>
             <label for="currentPassword">目前密碼:</label>
             <input type="password" id="currentPassword" required>
             <label for="newPassword">新密碼:</label>
@@ -156,58 +236,86 @@ function toggleMenu() {
             <label for="confirmPassword">確認新密碼:</label>
             <input type="password" id="confirmPassword" required>
             <button onclick="changePassword()">確認更改</button>
-            <a class="toggle-link" onclick="logout()">登出</a>
-        </div>
+             <a class="toggle-link inline" onclick="showBlog()">返回部落格</a>
+            </div>
 
-        <div id="blogSection" class="section">
-            <h2>發文區</h2>
-            <div id="postForm">
-                <label for="postContent">發布新文章:</label>
-                <textarea id="postContent" rows="4"></textarea>
-                <button onclick="submitPost()">發布</button>
-            </div>
-            <div id="postsContainer" style="margin-top: 20px;">
-                //通過JavaScript動態顯示文章
-            </div>
-        </div>
     </div>
 
     <script>
         // 儲存登入者的資訊
         let currentLoggedInUser = null;
         let isAdmin = false;
+        let menuOpen = false; // 追蹤選單狀態
+
+        function toggleMenu() {
+            const menu = document.getElementById('dropdownMenu');
+            const toggle = document.getElementById('menuToggle');
+            menuOpen = !menuOpen;
+            menu.style.display = menuOpen ? 'block' : 'none';
+            toggle.innerText = menuOpen ? '×' : '≡';
+        }
 
         // 顯示登入區塊的函數
         function showLogin() {
             document.getElementById('loginSection').style.display = 'block';
-            document.getElementById('changePasswordSection').style.display = 'none';
+            document.getElementById('loggedInContent').style.display = 'none'; // 隱藏登入後內容區
             document.getElementById('blogSection').style.display = 'none';
-            // 清空可能存在的歡迎訊息和密碼欄位
-            const welcomeMsgElement = document.getElementById('welcomeMessage');
-            if (welcomeMsgElement) {
-                welcomeMsgElement.innerText = '';
-            }
+            document.getElementById('changePasswordSection').style.display = 'none';
+            document.getElementById('loggedInHeader').style.display = 'none'; // 隱藏歡迎訊息
+            document.getElementById('accountSettingsButton').style.display = 'none'; // 隱藏帳號設定按鈕
+            document.getElementById('logoutButton').style.display = 'none'; // 隱藏登出按鈕
+            // 清空登入欄位
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';
+            // 清空可能殘留的密碼欄位
             document.getElementById('currentPassword').value = '';
             document.getElementById('newPassword').value = '';
             document.getElementById('confirmPassword').value = '';
         }
 
-        // 顯示更改密碼區塊的函數 (登入成功時呼叫)
-        function showChangePassword() {
+         // 顯示部落格區塊的函數 (登入成功或從更改密碼返回時呼叫)
+        function showBlog() {
             document.getElementById('loginSection').style.display = 'none';
-            document.getElementById('changePasswordSection').style.display = 'block';
-            document.getElementById('blogSection').style.display = 'block'; // 顯示部落格區域
-            
-            // 顯示歡迎訊息，如果是管理員特別標記
+            document.getElementById('changePasswordSection').style.display = 'none';
+            document.getElementById('loggedInContent').style.display = 'block'; // 顯示登入後內容區
+            document.getElementById('blogSection').style.display = 'block'; // 顯示部落格
+            document.getElementById('loggedInHeader').style.display = 'block'; // 顯示歡迎訊息區塊
+
+            // 設定歡迎訊息
             let welcomeText = `歡迎，${currentLoggedInUser}`;
             if (isAdmin) {
-                welcomeText += ' (管理員)';
+                welcomeText += '<span class="admin-badge">管理員</span>'; // 使用 badge 樣式
             }
             welcomeText += '!';
-            document.getElementById('welcomeMessage').innerText = welcomeText;
-            
-            // 獲取文章列表
-            fetchPosts();
+            document.getElementById('loggedInHeader').innerHTML = welcomeText; // 使用 innerHTML 以便解析 span
+
+            // 確保選單項目可見性正確
+            document.getElementById('accountSettingsButton').style.display = 'block';
+            document.getElementById('logoutButton').style.display = 'block';
+
+            // 獲取文章列表 (如果尚未加載)
+            if(document.getElementById('postsContainer').innerHTML.trim() === ''){
+                 fetchPosts();
+            }
+        }
+
+        // 顯示更改密碼表單的函數
+        function showPasswordChangeForm() {
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('loggedInContent').style.display = 'none'; // 隱藏部落格和歡迎訊息
+            document.getElementById('blogSection').style.display = 'none';
+            document.getElementById('changePasswordSection').style.display = 'block'; // 只顯示更改密碼表單
+
+            // 清空密碼欄位
+            document.getElementById('currentPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+
+             // 確保選單項目仍然可見 (如果使用者直接重新整理此頁面)
+            if(currentLoggedInUser){
+                document.getElementById('accountSettingsButton').style.display = 'block';
+                document.getElementById('logoutButton').style.display = 'block';
+            }
         }
 
         // 登入函數
@@ -229,7 +337,6 @@ function toggleMenu() {
                 if (response.ok) {
                     return response.json();
                 } else {
-                    // 嘗試讀取後端的回應文字
                     return response.text().then(text => {
                         throw new Error(text || `登入失敗 (狀態碼: ${response.status})`);
                     });
@@ -239,15 +346,14 @@ function toggleMenu() {
                 currentLoggedInUser = data.username;
                 isAdmin = data.isAdmin;
                 alert('登入成功！');
-                showChangePassword(); // 顯示更改密碼區塊
-                document.getElementById('loginUsername').value = '';
-                document.getElementById('loginPassword').value = '';
+                showBlog(); // *** 修改：登入成功後顯示部落格 ***
             })
             .catch(error => {
                 currentLoggedInUser = null;
                 isAdmin = false;
                 console.error('登入請求錯誤:', error);
-                alert('登入失敗：' + error.message + error.code);
+                alert('登入失敗：' + error.message);
+                showLogin(); // 登入失敗保持在登入頁
             });
         }
 
@@ -287,55 +393,63 @@ function toggleMenu() {
             .then(response => {
                 if (response.ok) {
                     alert('密碼更改成功！');
+                    // 清空欄位並留在更改密碼頁面，或可選擇跳回部落格
                     document.getElementById('currentPassword').value = '';
                     document.getElementById('newPassword').value = '';
                     document.getElementById('confirmPassword').value = '';
+                    // 可以選擇自動跳回部落格： showBlog();
                 } else {
-                     // 嘗試讀取後端的回應文字
                      response.text().then(text => {
-                         if (text) {
-                            alert('更改密碼失敗：' + text);
-                         } else {
-                            alert('更改密碼失敗：伺服器未提供錯誤訊息 (狀態碼: ' + response.status + ')');
-                         }
+                         alert('更改密碼失敗：' + (text || '伺服器未提供錯誤訊息 (狀態碼: ' + response.status + ')'));
                      }).catch(() => {
-                        // 文字讀取失敗
                         alert('更改密碼失敗：無法讀取伺服器回應 (狀態碼: ' + response.status + ')');
                      });
                 }
             })
             .catch(error => {
-                console.error('更改密碼請求錯誤:', error); // 在 Console 顯示詳細錯誤
-                alert('更改密碼請求發生錯誤：無法連接到伺服器或網路問題。請檢查伺服器狀態、網路連線及瀏覽器 Console (按下F12)中的詳細錯誤。');
+                console.error('更改密碼請求錯誤:', error);
+                alert('更改密碼請求發生錯誤：無法連接到伺服器或網路問題。');
             });
         }
 
         // 登出函數
         function logout() {
-            currentLoggedInUser = null; // 清除前端儲存的使用者資訊
-            isAdmin = false; // 清除管理員狀態
+            currentLoggedInUser = null;
+            isAdmin = false;
             alert('您已成功登出。');
             showLogin(); // 顯示登入畫面
+            // 確保選單已關閉
+            menuOpen = false;
+            document.getElementById('dropdownMenu').style.display = 'none';
+            document.getElementById('menuToggle').innerText = '≡';
         }
 
         // 獲取所有文章
         function fetchPosts() {
+            // 檢查是否登入，防止未登入時意外呼叫
+            if (!currentLoggedInUser) return;
+
             fetch('https://eight12-class.onrender.com/posts')
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                 })
                 .then(data => {
                     const postsContainer = document.getElementById('postsContainer');
                     postsContainer.innerHTML = ''; // 清空現有內容
-                    
-                    data.forEach(post => {
+
+                    // 將文章反向排序，最新的在前面
+                    data.reverse().forEach(post => {
                         const postElement = document.createElement('div');
                         postElement.classList.add('post');
-                        
+
                         // 創建文章內容
                         let postHtml = `
-                            <p><strong>${post.author}</strong> - ${post.date}</p>
-                            <p>${post.content}</p>
-                        `;
-                        
+                            <p><strong>${post.author}</strong> - <span style="font-size:0.8em; color:#666;">${new Date(post.date).toLocaleString()}</span></p>
+                            <p style="white-space: pre-wrap;">${post.content}</p> `;
+
                         // 如果是管理員，添加刪除按鈕
                         if (isAdmin) {
                             postHtml += `
@@ -344,26 +458,31 @@ function toggleMenu() {
                                 </div>
                             `;
                         }
-                        
+
                         postElement.innerHTML = postHtml;
                         postsContainer.appendChild(postElement);
                     });
                 })
                 .catch(error => {
                     console.error('獲取文章失敗:', error);
-                    alert('獲取文章失敗：請檢查網路連線或伺服器狀態。');
+                    alert('獲取文章失敗：請檢查網路連線或伺服器狀態。\n錯誤訊息: ' + error.message);
                 });
         }
 
         // 提交新文章
         function submitPost() {
             const content = document.getElementById('postContent').value;
-            
-            if (!content || !currentLoggedInUser) {
-                alert('請先登入並輸入文章內容');
+
+            if (!content.trim()) { // 檢查是否為空或只有空白
+                alert('文章內容不能為空！');
                 return;
             }
-            
+            if (!currentLoggedInUser) {
+                alert('請先登入再發文');
+                showLogin();
+                return;
+            }
+
             fetch('https://eight12-class.onrender.com/posts', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -371,7 +490,7 @@ function toggleMenu() {
             })
             .then(response => {
                 if (response.ok) {
-                    alert('文章發布成功！');
+                    // alert('文章發布成功！'); // 可以考慮移除，避免過多彈窗
                     document.getElementById('postContent').value = '';
                     fetchPosts(); // 重新獲取文章列表
                 } else {
@@ -384,46 +503,36 @@ function toggleMenu() {
             })
             .catch(error => {
                 console.error('發布文章請求錯誤:', error);
-                alert('發布文章請求發生錯誤：無法連接到伺服器或你的問題。');
+                alert('發布文章請求發生錯誤：無法連接到伺服器或網路問題。');
             });
         }
-        
+
         // 刪除文章 (僅管理員可用)
         function deletePost(postId) {
             if (!currentLoggedInUser || !isAdmin) {
                 alert('只有管理員可以刪除文章！');
                 return;
             }
-            
+
             if (confirm('確定要刪除這篇文章嗎？此操作無法撤銷。')) {
                 fetch(`https://eight12-class.onrender.com/posts/${postId}`, {
                     method: 'DELETE',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username: currentLoggedInUser })
+                    // 在 DELETE 請求中通常不需要 body，除非後端特別要求
+                    // body: JSON.stringify({ username: currentLoggedInUser })
+                    // 如果後端需要驗證，可能需要透過 header 或 URL 參數傳遞
                 })
                 .then(response => {
                     if (response.ok) {
-                        alert('文章已成功刪除！');
+                        // alert('文章已成功刪除！'); // 避免過多彈窗
                         fetchPosts(); // 重新獲取文章列表
                     } else {
                         response.text().then(text => {
-                            alert('刪除文章失敗：' + (text || '未知錯誤'));
+                            // 後端可能需要管理員身份驗證，如果未實現會失敗
+                            alert('刪除文章失敗：' + (text || `狀態碼 ${response.status}`));
                         }).catch(() => {
                             alert('刪除文章失敗：伺服器錯誤');
                         });
                     }
                 })
-                .catch(error => {
-                    console.error('刪除文章請求錯誤:', error);
-                    alert('刪除文章請求發生錯誤：無法連接到伺服器或網路問題。');
-                });
-            }
-        }
-
-        // 頁面載入時，預設顯示登入區塊
-        window.onload = function() {
-            showLogin();
-        };
-    </script>
-</body>
-</html>
+                .catch(error 
