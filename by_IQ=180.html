@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>812官方網站By IQ=180</title>
     <style>
-        body {
+                body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f4f4;
             display: flex;
@@ -93,7 +93,7 @@
             border-top: 1px solid #eee;
         }
         /* 初始隱藏區塊 */
-        #changePasswordSection, #blogSection, #loggedInHeader {
+        #changePasswordSection, #blogSection, #loggedInHeader, #loggedInContent { /* Added loggedInContent */
             display: none;
         }
         #loggedInHeader { /* Style for welcome message area */
@@ -192,6 +192,7 @@
              display: none;
          }
 
+
     </style>
 </head>
 <body>
@@ -242,7 +243,7 @@
     </div>
 
     <script>
-        // 儲存登入者的資訊
+                // 儲存登入者的資訊
         let currentLoggedInUser = null;
         let isAdmin = false;
         let menuOpen = false; // 追蹤選單狀態
@@ -259,9 +260,9 @@
         function showLogin() {
             document.getElementById('loginSection').style.display = 'block';
             document.getElementById('loggedInContent').style.display = 'none'; // 隱藏登入後內容區
-            document.getElementById('blogSection').style.display = 'none';
+            // document.getElementById('blogSection').style.display = 'none'; // blogSection is inside loggedInContent now
             document.getElementById('changePasswordSection').style.display = 'none';
-            document.getElementById('loggedInHeader').style.display = 'none'; // 隱藏歡迎訊息
+            // document.getElementById('loggedInHeader').style.display = 'none'; // loggedInHeader is inside loggedInContent now
             document.getElementById('accountSettingsButton').style.display = 'none'; // 隱藏帳號設定按鈕
             document.getElementById('logoutButton').style.display = 'none'; // 隱藏登出按鈕
             // 清空登入欄位
@@ -278,8 +279,8 @@
             document.getElementById('loginSection').style.display = 'none';
             document.getElementById('changePasswordSection').style.display = 'none';
             document.getElementById('loggedInContent').style.display = 'block'; // 顯示登入後內容區
-            document.getElementById('blogSection').style.display = 'block'; // 顯示部落格
-            document.getElementById('loggedInHeader').style.display = 'block'; // 顯示歡迎訊息區塊
+            // document.getElementById('blogSection').style.display = 'block'; // blogSection is inside loggedInContent now
+            // document.getElementById('loggedInHeader').style.display = 'block'; // loggedInHeader is inside loggedInContent now
 
             // 設定歡迎訊息
             let welcomeText = `歡迎，${currentLoggedInUser}`;
@@ -293,17 +294,15 @@
             document.getElementById('accountSettingsButton').style.display = 'block';
             document.getElementById('logoutButton').style.display = 'block';
 
-            // 獲取文章列表 (如果尚未加載)
-            if(document.getElementById('postsContainer').innerHTML.trim() === ''){
-                 fetchPosts();
-            }
+            // 獲取文章列表 (如果尚未加載或需要刷新)
+            fetchPosts(); // Fetch posts every time blog is shown or conditionally
         }
 
         // 顯示更改密碼表單的函數
         function showPasswordChangeForm() {
             document.getElementById('loginSection').style.display = 'none';
             document.getElementById('loggedInContent').style.display = 'none'; // 隱藏部落格和歡迎訊息
-            document.getElementById('blogSection').style.display = 'none';
+            // document.getElementById('blogSection').style.display = 'none';
             document.getElementById('changePasswordSection').style.display = 'block'; // 只顯示更改密碼表單
 
             // 清空密碼欄位
@@ -315,6 +314,11 @@
             if(currentLoggedInUser){
                 document.getElementById('accountSettingsButton').style.display = 'block';
                 document.getElementById('logoutButton').style.display = 'block';
+            } else {
+                 // If somehow user gets here without being logged in, hide buttons and show login
+                 document.getElementById('accountSettingsButton').style.display = 'none';
+                 document.getElementById('logoutButton').style.display = 'none';
+                 showLogin();
             }
         }
 
@@ -419,20 +423,29 @@
             alert('您已成功登出。');
             showLogin(); // 顯示登入畫面
             // 確保選單已關閉
-            menuOpen = false;
-            document.getElementById('dropdownMenu').style.display = 'none';
-            document.getElementById('menuToggle').innerText = '≡';
+            if (menuOpen) { // Check if menu is open before trying to close
+                toggleMenu();
+            }
         }
 
         // 獲取所有文章
         function fetchPosts() {
             // 檢查是否登入，防止未登入時意外呼叫
-            if (!currentLoggedInUser) return;
+            if (!currentLoggedInUser) {
+                 console.log("Not logged in, skipping fetchPosts.");
+                 document.getElementById('postsContainer').innerHTML = '<p>請先登入以查看文章。</p>'; // Optional: Show message
+                 return;
+            }
+
+            console.log("Fetching posts for user:", currentLoggedInUser); // Debugging log
 
             fetch('https://eight12-class.onrender.com/posts')
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
+                         // Try to get error message from backend if possible
+                         return response.text().then(text => {
+                             throw new Error(text || `HTTP error! status: ${response.status}`);
+                         });
                     }
                     return response.json();
                  })
@@ -440,23 +453,37 @@
                     const postsContainer = document.getElementById('postsContainer');
                     postsContainer.innerHTML = ''; // 清空現有內容
 
+                    if (!Array.isArray(data)) {
+                        console.error("Received non-array data for posts:", data);
+                        postsContainer.innerHTML = '<p>讀取文章格式錯誤。</p>';
+                        return;
+                    }
+
+                    if (data.length === 0) {
+                         postsContainer.innerHTML = '<p>目前沒有文章。</p>';
+                         return;
+                    }
+
                     // 將文章反向排序，最新的在前面
-                    data.reverse().forEach(post => {
+                    data.slice().reverse().forEach(post => { // Use slice() to avoid modifying original array if needed elsewhere
                         const postElement = document.createElement('div');
                         postElement.classList.add('post');
 
                         // 創建文章內容
                         let postHtml = `
-                            <p><strong>${post.author}</strong> - <span style="font-size:0.8em; color:#666;">${new Date(post.date).toLocaleString()}</span></p>
-                            <p style="white-space: pre-wrap;">${post.content}</p> `;
+                            <p><strong>${post.author || '未知作者'}</strong> - <span style="font-size:0.8em; color:#666;">${post.date ? new Date(post.date).toLocaleString() : '未知日期'}</span></p>
+                            <p style="white-space: pre-wrap;">${post.content || '(無內容)'}</p> `;
 
                         // 如果是管理員，添加刪除按鈕
-                        if (isAdmin) {
+                        // Make sure post.id exists and is valid
+                        if (isAdmin && post.id) {
                             postHtml += `
                                 <div class="admin-controls">
                                     <button class="delete-button" onclick="deletePost('${post.id}')">刪除</button>
                                 </div>
                             `;
+                        } else if (isAdmin && !post.id) {
+                             console.warn("Admin view, but post missing ID:", post);
                         }
 
                         postElement.innerHTML = postHtml;
@@ -465,13 +492,15 @@
                 })
                 .catch(error => {
                     console.error('獲取文章失敗:', error);
-                    alert('獲取文章失敗：請檢查網路連線或伺服器狀態。\n錯誤訊息: ' + error.message);
+                    document.getElementById('postsContainer').innerHTML = '<p>讀取文章失敗，請稍後再試。</p>'; // Show error in UI
+                    // alert('獲取文章失敗：請檢查網路連線或伺服器狀態。\n錯誤訊息: ' + error.message); // Avoid alert if showing message in UI
                 });
         }
 
         // 提交新文章
         function submitPost() {
-            const content = document.getElementById('postContent').value;
+            const contentElement = document.getElementById('postContent');
+            const content = contentElement.value;
 
             if (!content.trim()) { // 檢查是否為空或只有空白
                 alert('文章內容不能為空！');
@@ -491,7 +520,7 @@
             .then(response => {
                 if (response.ok) {
                     // alert('文章發布成功！'); // 可以考慮移除，避免過多彈窗
-                    document.getElementById('postContent').value = '';
+                    contentElement.value = ''; // 清空輸入框
                     fetchPosts(); // 重新獲取文章列表
                 } else {
                     response.text().then(text => {
@@ -513,26 +542,51 @@
                 alert('只有管理員可以刪除文章！');
                 return;
             }
+             if (!postId) {
+                 alert('無法刪除：文章 ID 無效。');
+                 return;
+             }
 
-            if (confirm('確定要刪除這篇文章嗎？此操作無法撤銷。')) {
+            if (confirm(`確定要刪除這篇文章 (ID: ${postId}) 嗎？此操作無法撤銷。`)) {
                 fetch(`https://eight12-class.onrender.com/posts/${postId}`, {
                     method: 'DELETE',
-                    headers: { 'Content-Type': 'application/json' },
-                    // 在 DELETE 請求中通常不需要 body，除非後端特別要求
-                    // body: JSON.stringify({ username: currentLoggedInUser })
-                    // 如果後端需要驗證，可能需要透過 header 或 URL 參數傳遞
+                    headers: {
+                         'Content-Type': 'application/json'
+                         // 如果後端需要身份驗證，可能需要添加 Authorization header
+                         // 'Authorization': 'Bearer ' + your_admin_token
+                     },
+                    // DELETE 通常不帶 body，除非後端 API 設計如此
+                    // body: JSON.stringify({ username: currentLoggedInUser }) // 可能不需要
                 })
                 .then(response => {
                     if (response.ok) {
                         // alert('文章已成功刪除！'); // 避免過多彈窗
                         fetchPosts(); // 重新獲取文章列表
                     } else {
-                        response.text().then(text => {
-                            // 後端可能需要管理員身份驗證，如果未實現會失敗
-                            alert('刪除文章失敗：' + (text || `狀態碼 ${response.status}`));
+                        // 嘗試讀取後端錯誤訊息
+                         response.text().then(text => {
+                            console.error(`刪除文章失敗 (ID: ${postId}): ${response.status}`, text);
+                            alert(`刪除文章失敗：${text || '伺服器錯誤'} (狀態碼: ${response.status})`);
                         }).catch(() => {
-                            alert('刪除文章失敗：伺服器錯誤');
+                             console.error(`刪除文章失敗 (ID: ${postId}): ${response.status}`, "無法讀取回應文字");
+                            alert(`刪除文章失敗：伺服器錯誤 (狀態碼: ${response.status})`);
                         });
                     }
                 })
-                .catch(error 
+                .catch(error => {
+                    console.error('刪除文章請求錯誤:', error);
+                    alert('刪除文章請求發生錯誤：無法連接到伺服器或網路問題。');
+                });
+            }
+        }
+
+        // 頁面載入時，預設顯示登入區塊
+        window.onload = function() {
+            console.log("Page loaded, showing login."); // Debugging log
+            showLogin();
+        };
+
+
+    </script>
+</body>
+</html>
