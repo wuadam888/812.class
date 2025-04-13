@@ -120,6 +120,22 @@
     </style>
 </head>
 <body>
+ <div style="position: absolute; top: 20px; right: 20px; z-index: 999;">
+  <button id="menuToggle" onclick="toggleMenu()">≡</button>
+  <div id="dropdownMenu" style="display: none; position: absolute; right: 0; top: 40px; background: white; border: 1px solid #ccc; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.15);">
+    <button onclick="showChangePassword()" style="display: block; width: 100%; border: none; background: none; padding: 10px; cursor: pointer;">帳號設定</button>
+    <a href="https://wuadam888.github.io/little.light.head/little.html" target="_blank" style="display: block; text-decoration: none; padding: 10px; color: black;">小光頭企業</a>
+  </div>
+</div><script>
+let menuOpen = false;
+function toggleMenu() {
+  const menu = document.getElementById('dropdownMenu');
+  const toggle = document.getElementById('menuToggle');
+  menuOpen = !menuOpen;
+  menu.style.display = menuOpen ? 'block' : 'none';
+  toggle.innerText = menuOpen ? '×' : '≡';
+}
+</script>
     <div class="container">
         <div id="loginSection">
             <h2>歡迎來到812官方網站!</h2>
