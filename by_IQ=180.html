@@ -260,9 +260,7 @@
         function showLogin() {
             document.getElementById('loginSection').style.display = 'block';
             document.getElementById('loggedInContent').style.display = 'none'; // 隱藏登入後內容區
-            // document.getElementById('blogSection').style.display = 'none'; // blogSection is inside loggedInContent now
             document.getElementById('changePasswordSection').style.display = 'none';
-            // document.getElementById('loggedInHeader').style.display = 'none'; // loggedInHeader is inside loggedInContent now
             document.getElementById('accountSettingsButton').style.display = 'none'; // 隱藏帳號設定按鈕
             document.getElementById('logoutButton').style.display = 'none'; // 隱藏登出按鈕
             // 清空登入欄位
@@ -274,14 +272,15 @@
             document.getElementById('confirmPassword').value = '';
         }
 
-         // 顯示部落格區塊的函數 (登入成功或從更改密碼返回時呼叫)
+         // 顯示部落格區塊的函數 (登入成功或從更改密碼返回時呼叫) - 已修正
         function showBlog() {
             document.getElementById('loginSection').style.display = 'none';
             document.getElementById('changePasswordSection').style.display = 'none';
             document.getElementById('loggedInContent').style.display = 'block'; // 顯示登入後內容區
-            // document.getElementById('blogSection').style.display = 'block'; // blogSection is inside loggedInContent now
-            // document.getElementById('loggedInHeader').style.display = 'block'; // loggedInHeader is inside loggedInContent now
-
+            
+            // *** 確保部落格區塊顯示 (這是修正的地方) ***
+            document.getElementById('blogSection').style.display = 'block'; 
+            
             // 設定歡迎訊息
             let welcomeText = `歡迎，${currentLoggedInUser}`;
             if (isAdmin) {
@@ -302,7 +301,6 @@
         function showPasswordChangeForm() {
             document.getElementById('loginSection').style.display = 'none';
             document.getElementById('loggedInContent').style.display = 'none'; // 隱藏部落格和歡迎訊息
-            // document.getElementById('blogSection').style.display = 'none';
             document.getElementById('changePasswordSection').style.display = 'block'; // 只顯示更改密碼表單
 
             // 清空密碼欄位
@@ -585,8 +583,7 @@
             console.log("Page loaded, showing login."); // Debugging log
             showLogin();
         };
-
-
+                   
     </script>
 </body>
 </html>
