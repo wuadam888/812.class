@@ -11,6 +11,8 @@ let accounts = [
       { username: '81201', password: '123456', isAdmin: false },
       { username: '81202', password: '221102', isAdmin: false },
       { username: '81203', password: '123456', isAdmin: false },
+      { username: '81204', password: '123456', isAdmin: false },
+      { username: '81205', password: '123456', isAdmin: false },
       { username: '81206', password: '123456', isAdmin: false },
       { username: '81208', password: '123456', isAdmin: false },
       { username: '81209', password: '123456', isAdmin: false },
