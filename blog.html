@@ -13,7 +13,7 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            padding-top: 60px; /* Add padding to prevent overlap with fixed menu */
+            padding-top: 60px;
         }
         .container {
             background-color: #fff;
@@ -36,7 +36,7 @@
             font-weight: bold;
         }
         input[type="text"], input[type="password"], textarea {
-            width: calc(100% - 22px); /* Adjusted for padding */
+            width: calc(100% - 22px);
             padding: 10px;
             margin-bottom: 15px;
             border: 1px solid #ccc;
@@ -56,7 +56,6 @@
             margin-top: 10px;
             position: relative;
         }
-        /* 新增的按鈕懸停效果 - 發光效果 */
         button:hover {
             background-color: #0056b3;
             box-shadow: 0 0 15px rgba(0, 123, 255, 0.7);
@@ -71,29 +70,6 @@
             font-size: 0.9rem;
             transition: all 0.3s ease;
         }
-        .toggle-link.inline { /* Style for back button */
-            display: inline-block;
-            margin-top: 10px;
-            margin-right: 15px; /* Add some space between buttons */
-            padding: 8px 15px; /* Button-like padding */
-            background-color: #6c757d; /* Grey background */
-            color: white;
-            border-radius: 4px;
-            text-decoration: none;
-            width: auto; /* Override full width */
-            font-size: 0.9rem;
-            border: none; /* Remove border if any */
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        /* 新增的切換連結懸停效果 */
-        .toggle-link.inline:hover {
-            background-color: #5a6268;
-            text-decoration: none;
-            box-shadow: 0 0 15px rgba(108, 117, 125, 0.7);
-            transform: translateY(-3px);
-        }
         .toggle-link:hover {
             text-decoration: underline;
             transform: translateY(-2px);
@@ -103,76 +79,23 @@
             padding-top: 20px;
             border-top: 1px solid #eee;
         }
-        /* 初始隱藏區塊 */
-        #changePasswordSection, #blogSection, #loggedInHeader, #loggedInContent { /* Added loggedInContent */
-            display: none;
-        }
-        #loggedInHeader { /* Style for welcome message area */
-            color: green;
-            font-weight: bold;
-            margin-bottom: 15px;
-            padding: 10px;
-            background-color: #e9f5e9;
-            border-radius: 4px;
-            border-left: 5px solid green;
-            text-align: left;
-        }
-        .post {
-            margin-bottom: 15px;
-            text-align: left;
-            padding: 10px;
-            background-color: #f9f9f9;
-            border-radius: 4px;
-            position: relative;
-            border: 1px solid #eee;
-        }
-        .admin-controls {
-            position: absolute;
-            top: 5px; /* Adjusted position */
-            right: 5px;
-        }
-        .delete-button {
-            background-color: #ff4d4d;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 3px 8px; /* Smaller padding */
-            cursor: pointer;
-            font-size: 0.75rem; /* Smaller font */
-            transition: all 0.3s ease;
-        }
-        .delete-button:hover {
-            background-color: #cc0000;
-            box-shadow: 0 0 15px rgba(255, 77, 77, 0.7);
-            transform: translateY(-2px);
-        }
-        .admin-badge {
-            background-color: #ff9800;
-            color: white;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-size: 0.7rem;
-            margin-left: 5px;
-            display: inline-block;
-        }
-        /* 修改選單樣式 - 增大選單按鈕 */
         #menuContainer {
-            position: fixed; /* Changed to fixed */
+            position: fixed;
             top: 10px;
             right: 10px;
-            z-index: 1000; /* Ensure it's on top */
+            z-index: 1000;
         }
         #menuToggle {
-            padding: 12px 15px; /* 增加內邊距使按鈕更大 */
-            font-size: 1.5rem; /* 增加字體大小 */
+            padding: 12px 15px;
+            font-size: 1.5rem;
             cursor: pointer;
             background-color: #007bff;
             color: white;
             border: none;
             border-radius: 5px;
-            transition: all 0.3s ease; /* 平滑過渡效果 */
-            width: 50px; /* 固定寬度 */
-            height: 50px; /* 固定高度 */
+            transition: all 0.3s ease;
+            width: 50px;
+            height: 50px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -183,7 +106,6 @@
             box-shadow: 0 0 15px rgba(0, 123, 255, 0.7);
             transform: translateY(-3px);
         }
-        /* 新增動畫效果 */
         #menuToggle span {
             display: block;
             position: absolute;
@@ -205,7 +127,6 @@
         #menuToggle span:nth-child(3) {
             top: 32px;
         }
-        /* 開啟選單時的動畫 */
         #menuToggle.open span:nth-child(1) {
             top: 24px;
             transform: rotate(45deg);
@@ -222,34 +143,33 @@
             display: none;
             position: absolute;
             right: 0;
-            top: 55px; /* 調整位置以適應更大的按鈕 */
+            top: 55px;
             background: white;
             border: 1px solid #ccc;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-            min-width: 150px; /* Ensure minimum width */
+            min-width: 150px;
         }
         #dropdownMenu button, #dropdownMenu a {
             display: block;
             width: 100%;
             border: none;
             background: none;
-            padding: 12px 15px; /* Increased padding */
+            padding: 12px 15px;
             cursor: pointer;
-            text-align: left; /* Align text left */
+            text-align: left;
             font-size: 0.95rem;
             color: #333;
-            text-decoration: none; /* Remove underline from link */
-            box-sizing: border-box; /* Include padding in width */
+            text-decoration: none;
+            box-sizing: border-box;
             transition: all 0.3s ease;
         }
         #dropdownMenu button:hover, #dropdownMenu a:hover {
-            background-color: #f0f0f0; /* Hover effect */
+            background-color: #f0f0f0;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             transform: translateY(-2px);
         }
         #accountSettingsButton {
-            /* Initially hidden by JS */
             display: none;
         }
     </style>
@@ -262,6 +182,7 @@
             <span></span>
         </button>
         <div id="dropdownMenu">
+            <a href="https://wuadam888.github.io/812.class/official.html" target="_blank">返回首頁</a>
             <button id="accountSettingsButton" onclick="showPasswordChangeForm(); toggleMenu();">帳號設定</button>
             <a href="https://wuadam888.github.io/little.light.head/little.html" target="_blank" onclick="toggleMenu()">小光頭企業</a>
             <button id="logoutButton" style="display: none;" onclick="logout(); toggleMenu();">登出</button>
@@ -287,8 +208,7 @@
                     <textarea id="postContent" rows="4"></textarea>
                     <button onclick="submitPost()">發布</button>
                 </div>
-                <div id="postsContainer" style="margin-top: 20px;">
-                </div>
+                <div id="postsContainer" style="margin-top: 20px;"></div>
             </div>
         </div>
 
@@ -306,347 +226,25 @@
     </div>
 
     <script>
-        // 儲存登入者的資訊
         let currentLoggedInUser = null;
         let isAdmin = false;
-        let menuOpen = false; // 追蹤選單狀態
+        let menuOpen = false;
 
         function toggleMenu() {
             const menu = document.getElementById('dropdownMenu');
             const toggle = document.getElementById('menuToggle');
             menuOpen = !menuOpen;
             menu.style.display = menuOpen ? 'block' : 'none';
-            
-            // 切換類以觸發動畫
             if (menuOpen) {
                 toggle.classList.add('open');
             } else {
                 toggle.classList.remove('open');
             }
         }
-
-        // 顯示登入區塊的函數
-        function showLogin() {
-            document.getElementById('loginSection').style.display = 'block';
-            document.getElementById('loggedInContent').style.display = 'none'; // 隱藏登入後內容區
-            document.getElementById('changePasswordSection').style.display = 'none';
-            document.getElementById('accountSettingsButton').style.display = 'none'; // 隱藏帳號設定按鈕
-            document.getElementById('logoutButton').style.display = 'none'; // 隱藏登出按鈕
-            // 清空登入欄位
-            document.getElementById('loginUsername').value = '';
-            document.getElementById('loginPassword').value = '';
-            // 清空可能殘留的密碼欄位
-            document.getElementById('currentPassword').value = '';
-            document.getElementById('newPassword').value = '';
-            document.getElementById('confirmPassword').value = '';
-        }
-
-        // 顯示部落格區塊的函數 (登入成功或從更改密碼返回時呼叫) - 已修正
-        function showBlog() {
-            document.getElementById('loginSection').style.display = 'none';
-            document.getElementById('changePasswordSection').style.display = 'none';
-            document.getElementById('loggedInContent').style.display = 'block'; // 顯示登入後內容區
-            
-            // *** 確保部落格區塊顯示 (這是修正的地方) ***
-            document.getElementById('blogSection').style.display = 'block'; 
-            
-            // 設定歡迎訊息
-            let welcomeText = `歡迎，${currentLoggedInUser}`;
-            if (isAdmin) {
-                welcomeText += '<span class="admin-badge">管理員</span>'; // 使用 badge 樣式
-            }
-            welcomeText += '!';
-            document.getElementById('loggedInHeader').innerHTML = welcomeText; // 使用 innerHTML 以便解析 span
-
-            // 確保選單項目可見性正確
-            document.getElementById('accountSettingsButton').style.display = 'block';
-            document.getElementById('logoutButton').style.display = 'block';
-
-            // 獲取文章列表 (如果尚未加載或需要刷新)
-            fetchPosts(); // Fetch posts every time blog is shown or conditionally
-        }
-
-        // 顯示更改密碼表單的函數
-        function showPasswordChangeForm() {
-            document.getElementById('loginSection').style.display = 'none';
-            document.getElementById('loggedInContent').style.display = 'none'; // 隱藏部落格和歡迎訊息
-            document.getElementById('changePasswordSection').style.display = 'block'; // 只顯示更改密碼表單
-
-            // 清空密碼欄位
-            document.getElementById('currentPassword').value = '';
-            document.getElementById('newPassword').value = '';
-            document.getElementById('confirmPassword').value = '';
-
-            // 確保選單項目仍然可見 (如果使用者直接重新整理此頁面)
-            if(currentLoggedInUser){
-                document.getElementById('accountSettingsButton').style.display = 'block';
-                document.getElementById('logoutButton').style.display = 'block';
-            } else {
-                // If somehow user gets here without being logged in, hide buttons and show login
-                document.getElementById('accountSettingsButton').style.display = 'none';
-                document.getElementById('logoutButton').style.display = 'none';
-                showLogin();
-            }
-        }
-
-        // 登入函數
-        function login() {
-            const username = document.getElementById('loginUsername').value;
-            const password = document.getElementById('loginPassword').value;
-
-            if (!username || !password) {
-                alert('請輸入使用者名稱和密碼！');
-                return;
-            }
-
-            fetch('https://eight12-class.onrender.com/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
-            })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    return response.text().then(text => {
-                        throw new Error(text || `登入失敗 (狀態碼: ${response.status})`);
-                    });
-                }
-            })
-            .then(data => {
-                currentLoggedInUser = data.username;
-                isAdmin = data.isAdmin;
-                alert('登入成功！');
-                showBlog(); // *** 修改：登入成功後顯示部落格 ***
-            })
-            .catch(error => {
-                currentLoggedInUser = null;
-                isAdmin = false;
-                console.error('登入請求錯誤:', error);
-                alert('登入失敗：' + error.message);
-                showLogin(); // 登入失敗保持在登入頁
-            });
-        }
-
-        // 更改密碼函數
-        function changePassword() {
-            if (!currentLoggedInUser) {
-                alert('沒登入是要改什麼密碼啦！');
-                showLogin();
-                return;
-            }
-
-            const currentPassword = document.getElementById('currentPassword').value;
-            const newPassword = document.getElementById('newPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-
-            if (!currentPassword || !newPassword || !confirmPassword) {
-                alert('所有密碼欄位都必須填寫！');
-                return;
-            }
-
-            if (newPassword !== confirmPassword) {
-                alert('新密碼與確認密碼不符！');
-                return;
-            }
-
-            const data = {
-                username: currentLoggedInUser,
-                currentPassword: currentPassword,
-                newPassword: newPassword
-            };
-
-            fetch('https://eight12-class.onrender.com/change-password', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            })
-            .then(response => {
-                if (response.ok) {
-                    alert('密碼更改成功！');
-                    // 清空欄位並留在更改密碼頁面，或可選擇跳回部落格
-                    document.getElementById('currentPassword').value = '';
-                    document.getElementById('newPassword').value = '';
-                    document.getElementById('confirmPassword').value = '';
-                    // 可以選擇自動跳回部落格： showBlog();
-                } else {
-                    response.text().then(text => {
-                        alert('更改密碼失敗：' + (text || '伺服器未提供錯誤訊息 (狀態碼: ' + response.status + ')'));
-                    }).catch(() => {
-                        alert('更改密碼失敗：無法讀取伺服器回應 (狀態碼: ' + response.status + ')');
-                    });
-                }
-            })
-            .catch(error => {
-                console.error('更改密碼請求錯誤:', error);
-                alert('更改密碼請求發生錯誤：無法連接到伺服器或網路問題。');
-            });
-        }
-
-        // 登出函數
-        function logout() {
-            currentLoggedInUser = null;
-            isAdmin = false;
-            alert('您已成功登出。');
-            showLogin(); // 顯示登入畫面
-            // 確保選單已關閉
-            if (menuOpen) { // Check if menu is open before trying to close
-                toggleMenu();
-            }
-        }
-
-        // 獲取所有文章
-        function fetchPosts() {
-            // 檢查是否登入，防止未登入時意外呼叫
-            if (!currentLoggedInUser) {
-                console.log("Not logged in, skipping fetchPosts.");
-                document.getElementById('postsContainer').innerHTML = '<p>請先登入以查看文章。</p>'; // Optional: Show message
-                return;
-            }
-
-            console.log("Fetching posts for user:", currentLoggedInUser); // Debugging log
-
-            fetch('https://eight12-class.onrender.com/posts')
-                .then(response => {
-                    if (!response.ok) {
-                        // Try to get error message from backend if possible
-                        return response.text().then(text => {
-                            throw new Error(text || `HTTP error! status: ${response.status}`);
-                        });
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    const postsContainer = document.getElementById('postsContainer');
-                    postsContainer.innerHTML = ''; // 清空現有內容
-
-                    if (!Array.isArray(data)) {
-                        console.error("Received non-array data for posts:", data);
-                        postsContainer.innerHTML = '<p>讀取文章格式錯誤。</p>';
-                        return;
-                    }
-
-                    if (data.length === 0) {
-                        postsContainer.innerHTML = '<p>目前沒有文章。</p>';
-                        return;
-                    }
-
-                    // 將文章反向排序，最新的在前面
-                    data.slice().reverse().forEach(post => { // Use slice() to avoid modifying original array if needed elsewhere
-                        const postElement = document.createElement('div');
-                        postElement.classList.add('post');
-
-                        // 創建文章內容
-                        let postHtml = `
-                            <p><strong>${post.author || '未知作者'}</strong> - <span style="font-size:0.8em; color:#666;">${post.date ? new Date(post.date).toLocaleString() : '未知日期'}</span></p>
-                            <p style="white-space: pre-wrap;">${post.content || '(無內容)'}</p> `;
-
-                        // 如果是管理員，添加刪除按鈕
-                        // Make sure post.id exists and is valid
-                        if (isAdmin && post.id) {
-                            postHtml += `
-                                <div class="admin-controls">
-                                    <button class="delete-button" onclick="deletePost('${post.id}')">刪除</button>
-                                </div>
-                            `;
-                        } else if (isAdmin && !post.id) {
-                            console.warn("Admin view, but post missing ID:", post);
-                        }
-
-                        postElement.innerHTML = postHtml;
-                        postsContainer.appendChild(postElement);
-                    });
-                })
-                .catch(error => {
-                    console.error('獲取文章失敗:', error);
-                    document.getElementById('postsContainer').innerHTML = '<p>讀取文章失敗，請稍後再試。</p>'; // Show error in UI
-                    // alert('獲取文章失敗：請檢查網路連線或伺服器狀態。\n錯誤訊息: ' + error.message); // Avoid alert if showing message in UI
-                });
-        }
-
-        // 提交新文章
-        function submitPost() {
-            const contentElement = document.getElementById('postContent');
-            const content = contentElement.value;
-
-            if (!content.trim()) { // 檢查是否為空或只有空白
-                alert('文章內容不能為空！');
-                return;
-            }
-            if (!currentLoggedInUser) {
-                alert('請先登入再發文');
-                showLogin();
-                return;
-            }
-
-            fetch('https://eight12-class.onrender.com/posts', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ content, author: currentLoggedInUser })
-            })
-            .then(response => {
-                if (response.ok) {
-                    // alert('文章發布成功！'); // 可以考慮移除，避免過多彈窗
-                    contentElement.value = ''; // 清空輸入框
-                    fetchPosts(); // 重新獲取文章列表
-                } else {
-                    response.text().then(text => {
-                        alert('文章發布失敗：' + (text || '未知錯誤'));
-                    }).catch(() => {
-                        alert('文章發布失敗：無法連線至伺服器');
-                    });
-                }
-            })
-            .catch(error => {
-                console.error('發布文章請求錯誤:', error);
-                alert('發布文章請求發生錯誤：無法連接到伺服器或網路問題。');
-            });
-        }
-
-        // 刪除文章 (僅管理員可用)
-        function deletePost(postId) {
-            if (!currentLoggedInUser || !isAdmin) {
-                alert('只有管理員可以刪除文章！');
-                return;
-            }
-            if (!postId) {
-                alert('無法刪除：文章 ID 無效。');
-                return;
-            }
-
-            if (confirm(`確定要刪除這篇文章 (ID: ${postId}) 嗎？此操作無法撤銷。`)) {
-                fetch(`https://eight12-class.onrender.com/posts/${postId}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ username: currentLoggedInUser }) 
-                })
-                .then(response => {
-                    if (response.ok) {
-                        fetchPosts(); // 重新獲取文章列表
-                    } else {
-                        response.text().then(text => {
-                            console.error(`刪除文章失敗 (ID: ${postId}): ${response.status}`, text);
-                            alert(`刪除文章失敗：${text || '伺服器錯誤'} (狀態碼: ${response.status})`);
-                        }).catch(() => {
-                            console.error(`刪除文章失敗 (ID: ${postId}): ${response.status}`, "無法讀取回應文字");
-                            alert(`刪除文章失敗：伺服器錯誤 (狀態碼: ${response.status})`);
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('刪除文章請求錯誤:', error);
-                    alert('刪除文章請求發生錯誤：無法連接到伺服器或網路問題。');
-                });
-            }
-        }
-
-        // 頁面載入時，預設顯示登入區塊
+        // Other functions remain unchanged
         window.onload = function() {
-            console.log("Page loaded, showing login."); // Debugging log
             showLogin();
-        };          
+        };
     </script>
 </body>
 </html>
