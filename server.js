@@ -30,9 +30,9 @@ let accounts = [
       { username: '81234', password: '123456', isAdmin: false },
       { username: '81237', password: '123456', isAdmin: false }
 ];
-let posts = []; // 文章也先存在記憶體
+let posts = []; // 文章在記憶體
 
-// --- API 路由 (Endpoints) ---
+
 
 // 測試路由：確認伺服器是否活著
 app.get('/', (req, res) => {
@@ -80,7 +80,7 @@ app.post('/posts', (req, res) => {
   };
   posts.push(newPost);
   console.log('New post added by:', author);
-  // 回傳 201 Created 狀態碼表示資源成功建立
+  // 回傳 201 ✅
   res.status(201).json(newPost);
 });
 
@@ -88,12 +88,12 @@ app.post('/posts', (req, res) => {
 app.post('/change-password', (req, res) => {
   const { username, currentPassword, newPassword } = req.body;
   
-  // 驗證請求中是否包含所有必要欄位
+  // 所有必要欄位？
   if (!username || !currentPassword || !newPassword) {
     return res.status(400).json({ message: '缺少必要欄位' });
   }
   
-  // 查找用戶並驗證當前密碼
+  // 查用戶、驗證密碼
   const userIndex = accounts.findIndex(acc => 
     acc.username === username && acc.password === currentPassword);
   
@@ -108,34 +108,34 @@ app.post('/change-password', (req, res) => {
   res.json({ message: '密碼更改成功' });
 });
 
-// 刪除文章 API (只有管理員可以使用)
+// 刪除文章 API 
 app.delete('/posts/:id', (req, res) => {
   const { id } = req.params;
   const { username } = req.body;
   
-  // 查找用戶並檢查是否為管理員
+  // 查用戶、是否為管理員
   const account = accounts.find(acc => acc.username === username);
   
   if (!account || !account.isAdmin) {
     return res.status(403).json({ message: '權限不足：只有管理員可以刪除文章' });
   }
   
-  // 查找文章
+  // 找
   const postIndex = posts.findIndex(post => post.id.toString() === id);
   
   if (postIndex === -1) {
     return res.status(404).json({ message: '找不到該文章' });
   }
   
-  // 刪除文章
+  // 刪除
   posts.splice(postIndex, 1);
   console.log('Post deleted by admin:', username, 'Post ID:', id);
   
   res.json({ message: '文章已成功刪除' });
 });
 
-// --- 啟動伺服器 ---
-const PORT = process.env.PORT || 3000; // Render 會提供 PORT 環境變數
+
+const PORT = process.env.PORT || 3000; 
 app.listen(PORT, () => {
   console.log(`伺服器正在監聽 port ${PORT}...`);
 });
