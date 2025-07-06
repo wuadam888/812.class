@@ -216,10 +216,20 @@
       transform: scale(1.03);
     }
 
+    /* 手機版調整 */
     @media (max-width: 768px) {
+      .sidebar {
+        width: 100vw;
+        height: 100vh;
+        padding-top: 80px;
+        z-index: 2000;
+      }
+
+      .sidebar.open ~ .content {
+        margin-left: 0;
+      }
+
       .text, .images { flex: 1 1 100%; }
-      .sidebar { width: 180px; }
-      .sidebar.open ~ .content { margin-left: 180px; }
     }
 
     /* 歡迎畫面樣式 */
@@ -227,7 +237,7 @@
       position: fixed;
       inset: 0;
       background: white;
-      z-index: 2000;
+      z-index: 3000;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -293,7 +303,7 @@
   </style>
 </head>
 <body>
-  <!-- 歡迎畫面 -->
+  <!-- 超級宇宙歡迎畫面 -->
   <div id="welcomeOverlay">
     <h1>嗨嗨！912官網進行了大更新！</h1>
     <p>全新的側邊欄設計、配色及動畫！對了，還有基本的深色淺色模式👍👍👍</p>
@@ -305,7 +315,7 @@
     <button onclick="enterSite()">進入</button>
   </div>
 
-  <!-- 側邊欄 -->
+  
   <div class="sidebar" id="sidebar">
     <a class="category-link active" data-target="badminton">七年級羽球比賽</a>
     <a class="category-link" data-target="singing">英語歌唱比賽</a>
@@ -313,7 +323,7 @@
     <a class="category-link" data-target="recorder">八年級直笛比賽冠軍</a>
   </div>
 
-  <!-- 頁首 -->
+  
   <header>
     <div class="left-header">
       <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
@@ -322,7 +332,7 @@
     <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
   </header>
 
-  <!-- 主內容 -->
+  
   <div class="content">
     <div class="hero">
       <div class="hero-text">912是最棒的！</div>
@@ -369,7 +379,7 @@
     </section>
   </div>
 
-  <!-- JavaScript -->
+
   <script>
     function toggleSidebar() {
       document.getElementById('sidebar').classList.toggle('open');
@@ -403,6 +413,10 @@
             e.preventDefault();
             const target = link.getAttribute('data-target');
             showCategory(target);
+            // 手機關閉
+            if (window.innerWidth <= 768) {
+              toggleSidebar();
+            }
           });
         });
       });
