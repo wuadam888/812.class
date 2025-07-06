@@ -2,259 +2,431 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
-  <meta name="description" content="臺北市立天母國中112學年度912官方網站">
-  <meta name="author" content="吳尚諺"/>
-  <meta name="keywords" content="112912, 天母國中, 912官方網站"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>819 官方首頁</title>
+  <title>912 官方網站</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
+
     body {
       margin: 0;
-      font-family: "Segoe UI", sans-serif;
-      background-color: #fff;
+      font-family: 'Poppins', sans-serif;
+      background: #fef7f3;
       color: #333;
-    }
-    header {
-      background: white;
-      border-radius: 0 0 20px 20px;
-      padding: 15px 30px;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-      position: sticky;
-      top: 0;
-      z-index: 10;
+      transition: background 0.3s, color 0.3s;
     }
+
+    body.dark-mode {
+      background: #1e1e1e;
+      color: #eee;
+    }
+
+    body.dark-mode img {
+      filter: brightness(0.75);
+      transition: filter 0.3s;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .sidebar {
+      width: 220px;
+      background-color: #c27f48;
+      color: white;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      overflow-y: auto;
+      transform: translateX(-100%);
+      transition: transform 0.4s ease;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      padding-top: 60px;
+    }
+
+    body.dark-mode .sidebar {
+      background-color: #9e4f37;
+    }
+
+    .sidebar.open { transform: translateX(0); }
+
+    .sidebar a {
+      padding: 15px 25px;
+      text-decoration: none;
+      color: white;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+
+    .sidebar a:hover,
+    .sidebar a.active {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    header {
+      height: 60px;
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      z-index: 1001;
+      justify-content: space-between;
+    }
+
+    body.dark-mode header {
+      background: #2b2b2b;
+    }
+
+    .left-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
     .menu-toggle {
-      font-size: 24px;
+      font-size: 28px;
       background: none;
       border: none;
       cursor: pointer;
-      transition: transform 0.3s ease;
+      color: #c27f48;
     }
-    .menu-open .menu-toggle {
-      transform: rotate(90deg);
+
+    body.dark-mode .menu-toggle {
+      color: #9e4f37;
     }
-    .dropdown {
-      position: absolute;
-      top: 70px;
-      right: 30px;
-      background: white;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      display: none;
-      flex-direction: column;
-      z-index: 9;
-    }
-    .dropdown a {
-      padding: 12px 20px;
-      text-decoration: none;
-      color: #333;
+
+    .logo {
       font-weight: bold;
+      font-size: 20px;
+      color: #c27f48;
     }
-    .dropdown a:hover {
-      background: #f0f0f0;
+
+    body.dark-mode .logo {
+      color: #9e4f37;
     }
-    .menu-open .dropdown {
-      display: flex;
+
+    .theme-toggle {
+      font-size: 18px;
+      padding: 8px 14px;
+      background: #000;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
     }
-    .hero {
-      position: relative;
+
+    .theme-toggle:hover {
+      background: #333;
+    }
+
+    body.dark-mode .theme-toggle:hover {
+      background: #444;
+    }
+
+    .content {
+      margin-left: 0;
+      margin-top: 60px;
+      padding: 30px;
       width: 100%;
-      height: 280px;
-      background-image: url('https://raw.githubusercontent.com/wuadam888/812.class/df6c9c956c5313ba030a477280f522cb0ace7ffd/%E9%8C%A6%E6%97%97%E8%B6%85%E5%A4%9A812.jpg');
+      transition: margin-left 0.4s ease;
+    }
+
+    .sidebar.open ~ .content {
+      margin-left: 220px;
+    }
+
+    .hero {
+      height: 300px;
+      background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+        url('https://raw.githubusercontent.com/wuadam888/812.class/df6c9c956c5313ba030a477280f522cb0ace7ffd/%E9%8C%A6%E6%97%97%E8%B6%85%E5%A4%9A812.jpg');
       background-size: cover;
       background-position: center;
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
+      text-shadow: 1px 1px 4px black;
+      border-radius: 12px;
+      animation: fadeInUp 1s ease;
+    }
+
+    .hero-text {
       font-size: 2em;
       font-weight: bold;
-    }
-    .hero::after {
-      content: "";
-      position: absolute;
-      top: 0; right: 0; bottom: 0; left: 0;
-      background: rgba(0, 0, 0, 0.3);
-    }
-    .hero-text {
-      position: relative;
-      z-index: 1;
-      border: 3px solid white;
+      border: 2px solid white;
       padding: 10px 20px;
       border-radius: 20px;
+      background: rgba(0, 0, 0, 0.4);
     }
-    .categories {
-      display: flex;
-      overflow-x: auto;
-      padding: 10px 20px;
-      border-bottom: 1px solid #eee;
-      gap: 20px;
-      font-size: 1.2em;
-      white-space: nowrap;
-    }
-    .categories a {
-      text-decoration: none;
-      color: #333;
-      font-weight: normal;
-      cursor: pointer;
-    }
-    .categories a.active {
-      font-weight: bold;
-      border-bottom: 2px solid #000;
-    }
+
     .section {
-      padding: 30px 20px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
       display: none;
+      padding: 40px 0;
+      gap: 20px;
+      flex-wrap: wrap;
+      animation: fadeInUp 0.5s ease;
     }
+
     .section.active {
       display: flex;
+      flex-direction: column;
     }
+
     .section h2 {
       width: 100%;
       font-size: 1.8em;
-      margin-bottom: 10px;
+      color: #c27f48;
+      margin-bottom: 20px;
     }
+
+    body.dark-mode .section h2 {
+      color: #9e4f37 !important;
+    }
+
     .text, .images {
       flex: 1 1 45%;
       min-width: 300px;
     }
+
     .text {
-      font-size: 1.8em;
+      font-size: 1.1em;
+      line-height: 1.6;
     }
+
     .images img {
-      max-width: 100%;
-      height: auto;
-      margin-bottom: 10px;
-      border-radius: 8px;
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-bottom: 15px;
+      transition: transform 0.3s ease;
     }
+
+    .images img:hover {
+      transform: scale(1.03);
+    }
+
     @media (max-width: 768px) {
-      .text, .images {
-        flex: 1 1 100%;
-      }
+      .text, .images { flex: 1 1 100%; }
+      .sidebar { width: 180px; }
+      .sidebar.open ~ .content { margin-left: 180px; }
+    }
+
+    /* 歡迎畫面樣式 */
+    #welcomeOverlay {
+      position: fixed;
+      inset: 0;
+      background: white;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 30px;
+      font-family: 'Poppins', sans-serif;
+      transition: opacity 0.6s ease;
+    }
+
+    body.dark-mode #welcomeOverlay {
+      background: #1e1e1e;
+      color: #eee;
+    }
+
+    #welcomeOverlay h1 {
+      font-size: 2.5em;
+      color: #c27f48;
+      animation: fadeInUp 1s ease;
+      margin-bottom: 20px;
+    }
+
+    body.dark-mode #welcomeOverlay h1 {
+      color: #9e4f37;
+    }
+
+    #welcomeOverlay p {
+      max-width: 700px;
+      font-size: 1.2em;
+      animation: fadeInUp 1.5s ease;
+      margin: 10px 0;
+    }
+
+    #welcomeOverlay label {
+      margin-top: 20px;
+      font-size: 0.95em;
+      animation: fadeInUp 2s ease;
+    }
+
+    #welcomeOverlay button {
+      margin-top: 30px;
+      padding: 15px 25px;
+      background: #c27f48;
+      color: white;
+      font-size: 1.2em;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    body.dark-mode #welcomeOverlay button {
+      background: #9e4f37;
+    }
+
+    #welcomeOverlay button:hover {
+      background: #a86433;
+    }
+
+    body.dark-mode #welcomeOverlay button:hover {
+      background: #7f3e2d;
     }
   </style>
 </head>
 <body>
-  <header>
-    <div>912官方網站</div>
-    <button class="menu-toggle" id="menuBtn" onclick="toggleMenu()">≡</button>
-    <div class="dropdown">
-      <p>這裡現在什麼都沒有！</p>
-    </div>
-  </header>
-
-  <div class="hero">
-    <div class="hero-text">912是最棒的!</div>
+  <!-- 歡迎畫面 -->
+  <div id="welcomeOverlay">
+    <h1>嗨嗨！912官網進行了大更新！</h1>
+    <p>全新的側邊欄設計、配色及動畫！對了，還有基本的深色淺色模式👍👍👍</p>
+    <p><br><br>希望各位喜歡 :D<br>IQ=180 的 912</p>
+    <label>
+      <input type="checkbox" id="dontShowAgain" style="transform: scale(1.2); margin-right: 8px;" />
+      以後不再顯示此畫面
+    </label>
+    <button onclick="enterSite()">進入</button>
   </div>
 
-  <nav class="categories">
-    <a data-target="badminton" class="category-link active">七年級羽球比賽(部分)</a>
-    <a data-target="singing" class="category-link">七年級英語歌唱比賽</a>
-    <a data-target="liufuchun" class="category-link">六福村校外教學</a>
-    <a data-target="recorder" class="category-link">八年級直笛比賽冠軍</a>
-  </nav>
+  <!-- 側邊欄 -->
+  <div class="sidebar" id="sidebar">
+    <a class="category-link active" data-target="badminton">七年級羽球比賽</a>
+    <a class="category-link" data-target="singing">英語歌唱比賽</a>
+    <a class="category-link" data-target="liufuchun">六福村校外教學</a>
+    <a class="category-link" data-target="recorder">八年級直笛比賽冠軍</a>
+  </div>
 
-  <section id="badminton" class="section active">
-    <h2>七年級羽球比賽(部分)</h2>
-    <div class="images">
-      <img src="https://raw.githubusercontent.com/wuadam888/812.class/df6c9c956c5313ba030a477280f522cb0ace7ffd/%E7%BE%BD%E7%90%83.jpg" />
-      <img src="https://raw.githubusercontent.com/wuadam888/812.class/df6c9c956c5313ba030a477280f522cb0ace7ffd/%E7%BE%BD%E7%90%8328.jpg" />
-      <img src="https://raw.githubusercontent.com/wuadam888/812.class/df6c9c956c5313ba030a477280f522cb0ace7ffd/%E7%BE%BD%E7%90%83%E8%A7%80%E7%9C%BE.jpg" />
+  <!-- 頁首 -->
+  <header>
+    <div class="left-header">
+      <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+      <div class="logo">912 官方網站</div>
     </div>
-    <div class="text">
-      我們班七年級羽球比賽第三名，我們超棒!!!
-    </div>
-  </section>
+    <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+  </header>
 
-  <section id="singing" class="section">
-    <h2>七年級英語歌唱比賽</h2>
-    <div class="images">
-      <img src="https://raw.githubusercontent.com/wuadam888/812.class/df6c9c956c5313ba030a477280f522cb0ace7ffd/%E6%AD%8C%E5%94%B1%E5%85%A8%E6%99%AF.jpg" />
-      <img src="https://raw.githubusercontent.com/wuadam888/812.class/df6c9c956c5313ba030a477280f522cb0ace7ffd/%E6%AD%8C%E5%94%B1%E5%BE%97%E7%8D%8E%E5%90%88%E7%85%A7.jpg" />
-      <img src="https://raw.githubusercontent.com/wuadam888/812.class/df6c9c956c5313ba030a477280f522cb0ace7ffd/%E6%AD%8C%E5%94%B1%E5%BE%97%E7%8D%8E%E6%95%99%E5%AE%A4.jpg" />
+  <!-- 主內容 -->
+  <div class="content">
+    <div class="hero">
+      <div class="hero-text">912是最棒的！</div>
     </div>
-    <div class="text">
-      音樂跳舞類是912的強項？英語歌唱比賽「最佳精神獎」。
-    </div>
-  </section>
 
-  <section id="liufuchun" class="section">
-    <h2>六福村校外教學</h2>
-    <div class="images">
-      <img src="https://raw.githubusercontent.com/wuadam888/812.class/df6c9c956c5313ba030a477280f522cb0ace7ffd/%E5%85%AD%E7%A6%8F%E6%9D%91ALL.jpg" />
-    </div>
-    <div class="text">
-      這...只有一張照片，沒什麼好寫的。
-    </div>
-  </section>
+    <section id="badminton" class="section active">
+      <h2>七年級羽球比賽</h2>
+      <div class="images">
+        <img src="https://raw.githubusercontent.com/wuadam888/812.class/df6c9c956c5313ba030a477280f522cb0ace7ffd/%E7%BE%BD%E7%90%83.jpg" />
+      </div>
+      <div class="text">
+        我們班七年級羽球比賽第三名，我們超棒!!!
+      </div>
+    </section>
 
-  <section id="recorder" class="section">
-    <h2>八年級直笛比賽冠軍</h2>
-    <div class="images">
-      <img src="https://raw.githubusercontent.com/wuadam888/812.class/df6c9c956c5313ba030a477280f522cb0ace7ffd/%E7%9B%B4%E7%AC%9B%E5%85%A8%E6%99%AF.jpg" />
-      <img src="https://raw.githubusercontent.com/wuadam888/812.class/df6c9c956c5313ba030a477280f522cb0ace7ffd/%E7%9B%B4%E7%AC%9B%E5%8F%B0%E4%B8%8A%E9%A0%92%E7%8D%8E.jpg" />
-      <img src="https://raw.githubusercontent.com/wuadam888/812.class/df6c9c956c5313ba030a477280f522cb0ace7ffd/%E7%9B%B4%E7%AC%9B1st.jpg" />
-    </div>
-    <div class="text">
-      912的最高榮譽!!!直笛比賽冠軍！同時獲得三個獎項！
-    </div>
-  </section>
+    <section id="singing" class="section">
+      <h2>英語歌唱比賽</h2>
+      <div class="images">
+        <img src="https://raw.githubusercontent.com/wuadam888/812.class/df6c9c956c5313ba030a477280f522cb0ace7ffd/%E6%AD%8C%E5%94%B1%E5%85%A8%E6%99%AF.jpg" />
+      </div>
+      <div class="text">
+        音樂跳舞類是912的強項？英語歌唱比賽「最佳精神獎」。
+      </div>
+    </section>
 
+    <section id="liufuchun" class="section">
+      <h2>六福村校外教學</h2>
+      <div class="images">
+        <img src="https://raw.githubusercontent.com/wuadam888/812.class/df6c9c956c5313ba030a477280f522cb0ace7ffd/%E5%85%AD%E7%A6%8F%E6%9D%91ALL.jpg" />
+      </div>
+      <div class="text">
+        這...只有一張照片，沒什麼好寫的。
+      </div>
+    </section>
+
+    <section id="recorder" class="section">
+      <h2>八年級直笛比賽冠軍</h2>
+      <div class="images">
+        <img src="https://raw.githubusercontent.com/wuadam888/812.class/df6c9c956c5313ba030a477280f522cb0ace7ffd/%E7%9B%B4%E7%AC%9B%E5%85%A8%E6%99%AF.jpg" />
+      </div>
+      <div class="text">
+        912的最高榮譽!!!直笛比賽冠軍！同時獲得三個獎項！
+      </div>
+    </section>
+  </div>
+
+  <!-- JavaScript -->
   <script>
-    // 菜單開關功能
-    function toggleMenu() {
-      document.body.classList.toggle('menu-open');
-      const btn = document.getElementById('menuBtn');
-      btn.textContent = document.body.classList.contains('menu-open') ? '×' : '≡';
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
     }
-    
-    // 頁面載入時顯示第一個分類
-    document.addEventListener('DOMContentLoaded', function() {
-      showCategory('badminton');
-    });
-    
-    // 為所有類別連結添加點擊事件
-    const categoryLinks = document.querySelectorAll('.category-link');
-    categoryLinks.forEach(link => {
-      link.addEventListener('click', function() {
-        const target = this.getAttribute('data-target');
-        showCategory(target);
-      });
-    });
-    
-    // 顯示特定類別的內容
+
+    function toggleTheme() {
+      document.body.classList.toggle('dark-mode');
+      const btn = document.querySelector('.theme-toggle');
+      btn.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+    }
+
     function showCategory(categoryId) {
-      // 隱藏所有區塊
-      const allSections = document.querySelectorAll('.section');
-      allSections.forEach(section => {
-        section.classList.remove('active');
-      });
-      
-      // 顯示選定的區塊
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
       const targetSection = document.getElementById(categoryId);
       if (targetSection) {
         targetSection.classList.add('active');
       }
-      
-      // 更新類別選擇的活躍狀態
-      const allLinks = document.querySelectorAll('.category-link');
-      allLinks.forEach(link => {
+
+      document.querySelectorAll('.category-link').forEach(link => {
         link.classList.remove('active');
         if (link.getAttribute('data-target') === categoryId) {
           link.classList.add('active');
         }
       });
     }
+
+    function bindCategoryEvents() {
+      document.querySelectorAll('.category-link').forEach(link => {
+        ['click', 'touchstart'].forEach(evt => {
+          link.addEventListener(evt, (e) => {
+            e.preventDefault();
+            const target = link.getAttribute('data-target');
+            showCategory(target);
+          });
+        });
+      });
+    }
+
+    function enterSite() {
+      const overlay = document.getElementById('welcomeOverlay');
+      const checkbox = document.getElementById('dontShowAgain');
+      if (checkbox.checked) {
+        localStorage.setItem('hideWelcome', 'true');
+      }
+      overlay.style.opacity = 0;
+      setTimeout(() => {
+        overlay.style.display = 'none';
+      }, 600);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('hideWelcome') === 'true') {
+        document.getElementById('welcomeOverlay').style.display = 'none';
+      }
+
+      bindCategoryEvents();
+    });
   </script>
 </body>
 </html>
